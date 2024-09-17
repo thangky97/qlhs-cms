@@ -1,0 +1,432 @@
+// Layout
+// ========================================================================
+body,
+#root,
+.wrapper {
+  height: 100%;
+}
+
+.is-invalid.form-control .PhoneInputInput {
+  border: unset !important;
+}
+
+// Vertical Menu
+// ========================================================================
+.vertical-layout .main-menu {
+  &.expanded {
+    .navigation {
+      li:not(.open) {
+        & > ul {
+          display: block !important;
+        }
+      }
+    }
+  }
+
+  .navigation {
+    li:not(.open) {
+      a {
+        &:after {
+          transform: rotate(0deg) !important;
+        }
+      }
+    }
+  }
+}
+
+body #root .wrapper .ps__rail-y {
+  left: auto !important;
+  right: 1px !important;
+}
+
+// Horizontal Menu
+// ========================================================================
+.horizontal-layout {
+  &.navbar-static .navbar-scrolled {
+    background: $white !important;
+    box-shadow: rgba($black, 0.05) 0px 4px 20px 0px !important;
+  }
+
+  // Main Navbar
+  .header-navbar {
+    .navbar-container {
+      .dropdown-language,
+      .dropdown-cart,
+      .dropdown-notification,
+      .dropdown-user {
+        .dropdown-menu {
+          top: 3rem !important;
+        }
+      }
+    }
+  }
+
+  // Menu
+  .horizontal-menu-wrapper {
+    #main-menu-navigation {
+      .dropdown {
+        .dropdown-submenu {
+          .dropdown-toggle:after {
+            margin-top: -5px;
+          }
+        }
+      }
+    }
+
+    .navbar-horizontal {
+      ul.dropdown-menu {
+        .nav-item.active > a {
+          border-bottom: none;
+        }
+
+        // Scrollbar styles
+        &::-webkit-scrollbar {
+          width: 5px;
+          height: 5px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: $gray-500;
+          border-radius: 20px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: $gray-300;
+          border-radius: 30px;
+        }
+      }
+    }
+  }
+}
+
+// Bookmarks search
+// ========================================================================
+.header-navbar .navbar-container {
+  .navbar-nav {
+    .autocomplete-container .suggestion-item span {
+      line-height: 1.2;
+    }
+  }
+}
+
+// Component Code
+// ========================================================================
+.card-snippet {
+  pre {
+    margin-top: 0;
+    border-radius: 0.5rem;
+  }
+}
+
+// Dashboard Analytics
+// =======================================================================
+
+.card-congratulations {
+  .avatar svg {
+    height: 28px !important;
+    width: 28px !important;
+  }
+}
+
+// Card Analytics
+// =======================================================================
+.avg-session-progress {
+  height: 6px;
+}
+
+// Block UI
+// ========================================================================
+.block-ui-container {
+  .block-ui-overlay {
+    background: rgba($black, 0.6);
+  }
+}
+
+// React SlideDown
+// ========================================================================
+.react-slidedown {
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+}
+
+// Router Transitions
+// ========================================================================
+.animate__animated.animate__zoomIn,
+.animate__animated.animate__fadeInLeft {
+  --animate-duration: 1s;
+}
+
+// App Ecommerce
+// ========================================================================
+.ecommerce-application {
+  .content-wrapper.animate__animated {
+    animation: none;
+  }
+}
+
+// Customizer
+// ========================================================================
+.customizer {
+  .react-select {
+    width: 100%;
+    max-width: 200px;
+
+    .select__menu {
+      z-index: 2;
+    }
+  }
+}
+button {
+  // margin: 0px 10px !important;
+}
+#staff-section {
+  .select__menu {
+    position: relative !important;
+  }
+}
+
+[dir] .react-dataTable .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol,
+[dir] .react-dataTable .rdt_TableBody .rdt_TableRow .rdt_TableCell {
+  padding: unset !important;
+  padding-left: 1.2rem !important;
+}
+.select__menu {
+}
+.css-b8ldur-Input{
+
+  .select__input{
+      color:#d0d2d6;
+    
+  }
+}
+
+#react-select-6-input{
+  color: #d0d2d6 !important;
+}
+#react-select-5-input{
+  color: #d0d2d6 !important;
+}
+.text-ellipse-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  /*No of lines after which the ellipsis needs to be added*/
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 240px !important;
+}
+
+.selected-language {
+  color: white !important;
+}
+
+.auth-wrapper .navbar-nav span {
+  color: white !important;
+}
+
+[dir="ltr"] .swiper-pagination-fraction,
+[dir="ltr"] .swiper-pagination-custom,
+[dir="ltr"] .swiper-container-horizontal > .swiper-pagination-bullets {
+  left: 0;
+}
+
+.swiper-pagination-fraction,
+.swiper-pagination-custom,
+.swiper-container-horizontal > .swiper-pagination-bullets {
+  bottom: 50px !important;
+  width: 100%;
+}
+
+.swal2-popup.swal2-modal.swal2-show {
+  background: #181d2a !important;
+
+  .swal2-title {
+    color: white;
+    font-size: 1.3rem !important;
+  }
+  .swal2-actions {
+    .swal2-cancel {
+      background-color: #6c6363 !important;
+      margin-right: 15px;
+    }
+    .swal2-deny {
+      background-color: red !important  ;
+    }
+  }
+}
+
+.swal2-popup {
+  background: #181d2a !important;
+}
+
+// @media only screen and (max-width: 63.9375em) {
+
+//   #partner-card .swiper-slide.swiper-slide-active {
+//     width: fit-content !important;
+//     margin-right: 30px;
+//   }
+// }
+.react-dataTable .rdt_TableBody .rdt_TableRow .rdt_TableCell {
+  min-height: 70px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+.invalid-editor.is-invalid.form-control {
+  border: 1px solid red;
+  height: 12rem;
+  border-radius: 6px;
+  height: unset !important;
+  padding: unset !important;
+  .rdw-editor-main {
+    border: unset !important;
+  }
+}
+.card {
+  height: 100% !important;
+  margin: 0 !important;
+  // margin-top: 2rem;
+}
+
+.col-md-4 {
+  margin-top: 1rem;
+}
+
+.swiper-slide {
+  height: unset !important;
+}
+
+.slider-partner .swiper-wrapper {
+  height: unset;
+
+  // min-height: 400px;
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .slider-partner .swiper-wrapper {
+    .swiper-slide {
+      width: 324px !important;
+    }
+  }
+}
+
+.extension-title {
+  // font-size: 2rem !important;
+  font-weight: bold;
+}
+
+@media only screen and (max-width:576px) {
+
+  #section-slider {
+    .img-fluid{
+      object-fit: contain;
+    }
+    .content-slider {
+      position: relative;
+      transform: unset !important;
+    }
+
+    .slider-button {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
+tbody {
+  line-height: 26px !important;
+}
+
+#phoneCodeSelect {
+  width: 80px;
+}
+
+.PhoneInputInput {
+
+  padding: 0.438rem 1rem !important;
+  background-color: #293046;
+  background-clip: padding-box;
+  border: 1px solid #404656;
+  color: #b5b7bd;
+  border-radius: 0.357rem;
+
+  &:focus-visible {
+    outline: unset !important;
+  }
+}
+
+
+.banner-slider {
+  position: relative;
+  
+  .content-slider {
+    text-align: start;
+    max-width: 650px;
+    position: absolute;
+    // padding:0 50px !important;
+    // left: 50%;
+    // transform: translateX(-50%);
+    top: 50%;
+    transform: translateY(-50%);
+    color: white !important;
+    padding: 60px;
+
+
+    
+    .title-slider {
+      font-size: 27px;
+      padding-bottom: 57px;
+      // color: #fff;
+      font-weight: 700 !important;
+      max-width: 475px;
+      font-style: normal;
+      line-height: 130%;
+      
+    }
+      
+      
+
+
+      // .text-color {
+      //   -webkit-text-fill-color: transparent;
+      //   text-fill-color: transparent;
+      //   background: linear-gradient(91.97deg, #5c9af8 25.86%, #d150ff 74.79%);
+      //   -webkit-background-clip: text;
+      // }
+
+      .description-slider {
+        font-style: normal;
+        font-weight: 400;
+        line-height: 130%;
+        padding-top: 15px;
+
+        .h1 {
+          font-size: inherit !important;
+          font-weight: 500;
+          line-height: 130% !important;
+        }
+
+      }
+    
+  }
+}
+.main-menu .navbar-header .navbar-brand {
+margin: 1.35rem 2px;
+
+  .brand-logo img {
+    max-width: 31px;
+  }
+}
+
+.objectFit-contain img{
+  object-fit: contain;
+}
+.form-control.image{
+  padding: unset !important;
+  width: 100px !important;
+  height: 100px !important;
+}
