@@ -441,6 +441,7 @@ const AppRoutes = [
     },
   },
 
+  //môn học
   {
     path: "/apps/subject/list",
     component: lazy(() => import("../../views/apps/course/list/index")),
@@ -450,6 +451,32 @@ const AppRoutes = [
     component: lazy(() => import("../../views/apps/course/edit/index")),
     meta: {
       navLink: "/apps/subject/edit",
+    },
+  },
+
+  //phòng học
+  {
+    path: "/apps/classroom/list",
+    component: lazy(() => import("../../views/apps/classroom/list/index")),
+  },
+  {
+    path: "/apps/classroom/edit/:id",
+    component: lazy(() => import("../../views/apps/classroom/edit/index")),
+    meta: {
+      navLink: "/apps/classroom/edit",
+    },
+  },
+
+  //bộ môn
+  {
+    path: "/apps/department/list",
+    component: lazy(() => import("../../views/apps/department/list/index")),
+  },
+  {
+    path: "/apps/department/edit/:id",
+    component: lazy(() => import("../../views/apps/department/edit/index")),
+    meta: {
+      navLink: "/apps/department/edit",
     },
   },
 ];

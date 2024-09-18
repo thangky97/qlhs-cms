@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User } from "react-feather";
+import { User, Users } from "react-feather";
 import { FormattedMessage } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -15,39 +15,35 @@ import {
   TabContent,
   TabPane,
 } from "reactstrap";
-import { getUser } from "../store/action";
-import UserTab from "./User";
-
-const UserEdit = () => {
+import { getById } from "../store/action";
+import StaffTab from "./Staff";
+const StaffEdit = () => {
   const [activeTab, setActiveTab] = useState("1"),
-    store = useSelector((state) => state.users),
+    store = useSelector((state) => state.staffs),
     dispatch = useDispatch(),
-    { id } = useParams();
-
-  const toggle = (tab) => setActiveTab(tab);
-
+    { id } = useParams(),
+    toggle = (tab) => setActiveTab(tab);
   useEffect(() => {
-    dispatch(getUser(parseInt(id)));
-  }, [dispatch, id]);
-
+    dispatch(getById(parseInt(id)));
+  }, []);
   return store.selected !== null && store.selected !== undefined ? (
-    <Row className="app-user-edit">
+    <Row className="app-user-edit" id="staff-section">
       <Col sm="12">
         <Card>
           <CardBody className="pt-2">
             <Nav pills>
               <NavItem>
                 <NavLink active={activeTab === "1"} onClick={() => toggle("1")}>
-                  <User size={14} />
+                  <Users size={14} />
                   <span className="align-middle d-none d-sm-block">
-                    <FormattedMessage id="User" />
+                    <FormattedMessage id="System staff" />
                   </span>
                 </NavLink>
               </NavItem>
             </Nav>
             <TabContent activeTab={activeTab}>
               <TabPane tabId="1">
-                <UserTab selected={store.selected} store={store} />
+                <StaffTab selected={store.selected} store={store} />
               </TabPane>
             </TabContent>
           </CardBody>
@@ -60,4 +56,4 @@ const UserEdit = () => {
     </Alert>
   );
 };
-export default UserEdit;
+export default StaffEdit;

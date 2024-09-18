@@ -119,12 +119,12 @@ export const getDetail = (data) => {
 export const getInstractors = (params) => {
   return async (dispatch) => {
     await Service.send({
-      method: api.LIST_INSTRACTORS.method,
-      path: api.LIST_INSTRACTORS.path,
+      method: api.LIST_STAFF.method,
+      path: api.LIST_STAFF.path,
       data: params,
     }).then((response) => {
       dispatch({
-        type: "GET_DATA_INSTRACTORS",
+        type: "GET_DATA_STAFF",
         data: response?.data?.data,
         totalPages: response?.data?.total,
         params,
@@ -151,12 +151,12 @@ export const getDataCourse = (params) => {
     });
   };
 };
-export const getDetailCourse = (subjectId) => {
+export const getDetailCourse = (courseId) => {
   return async (dispatch) => {
     await Service.send({
       method: api.GET_COURSE_DETAIL.method,
       path: api.GET_COURSE_DETAIL.path,
-      query: { id: subjectId },
+      query: { id: courseId },
     })
       .then((response) => {
         dispatch({

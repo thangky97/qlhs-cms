@@ -36,27 +36,27 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
     title: yup
       .string()
       .required(<FormattedMessage id="Tên lớp học là bắt buộc" />),
-    number_students: yup
-      .string()
-      .required(<FormattedMessage id="Số học sinh là bắt buộc" />),
-    time: yup
-      .string()
-      .required(<FormattedMessage id="The time study field is required" />),
-    date: yup
-      .string()
-      .required(<FormattedMessage id="The school day field is required" />),
-    password: yup
-      .string()
-      .matches(/^[a-zA-Z0-9]*$/, {
-        message: <FormattedMessage id="validate field code" />,
-      })
-      .required(<FormattedMessage id="Mật khẩu lớp học là bắt buộc" />),
+    // number_students: yup
+    //   .string()
+    //   .required(<FormattedMessage id="Số học sinh là bắt buộc" />),
+    // time: yup
+    //   .string()
+    //   .required(<FormattedMessage id="The time study field is required" />),
+    // date: yup
+    //   .string()
+    //   .required(<FormattedMessage id="The school day field is required" />),
+    // password: yup
+    //   .string()
+    //   .matches(/^[a-zA-Z0-9]*$/, {
+    //     message: <FormattedMessage id="validate field code" />,
+    //   })
+    //   .required(<FormattedMessage id="Mật khẩu lớp học là bắt buộc" />),
     instructorId: yup
       .number()
-      .required(<FormattedMessage id="Vui lòng chọn môn học" />),
-    subjectId: yup
-      .number()
-      .required(<FormattedMessage id="Vui lòng chọn môn học" />),
+      .required(<FormattedMessage id="Vui lòng chọn giảng viên" />),
+    // courseId: yup
+    //   .number()
+    //   .required(<FormattedMessage id="Vui lòng chọn môn học" />),
   });
 
   const { register, errors, handleSubmit, setValue, setError, control } =
@@ -75,12 +75,12 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
         code: values.code,
         productId: parseInt(id),
         title: values.title,
-        number_students: values?.number_students,
-        time: values?.time,
-        date: values?.date,
-        password: values?.password,
+        number_students: values?.number_students || null,
+        time: values?.time || null,
+        date: values?.date || null,
+        password: values?.password || null,
         instructorId: parseInt(values?.instructorId),
-        subjectId: parseInt(values?.subjectId),
+        courseId: parseInt(values?.courseId) || null,
         description: values.description || "",
         status: values.status,
         lang: lang,
@@ -149,7 +149,7 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
           </small>
         </FormGroup>
 
-        <FormGroup>
+        {/* <FormGroup>
           <Label for="number_students">
             <FormattedMessage id="Số học sinh" />{" "}
             <span className="text-danger">*</span>
@@ -170,32 +170,9 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
           <small className="text-danger">
             {errors?.number_students && errors.number_students.message}
           </small>
-        </FormGroup>
-
-        {/* <FormGroup>
-          <Label for="termContent">
-            <FormattedMessage id="Content" />{" "}
-            <span className="text-danger"></span>
-          </Label>
-          <Editor
-            toolbar={{
-              image: { uploadCallback: uploadCallback },
-            }}
-            stripPastedStyles={true}
-            name="termContent"
-            editorState={termContent}
-            onEditorStateChange={(data) => setContent(data)}
-            innerRef={register(TermOptions.content)}
-            wrapperClassName="content_term"
-            editorClassName="editor-class"
-            toolbarClassName="toolbar-class"
-          />
-          <small className="text-danger">
-            {errors?.content && errors.content.message}
-          </small>
         </FormGroup> */}
 
-        <FormGroup>
+        {/* <FormGroup>
           <Label for="time">
             <FormattedMessage id="time" />{" "}
             <span className="text-danger">*</span>
@@ -222,9 +199,9 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
               <FormattedMessage id="Invalid name" />
             </small>
           )}
-        </FormGroup>
+        </FormGroup> */}
 
-        <FormGroup>
+        {/* <FormGroup>
           <Label for="date">
             <FormattedMessage id="school day" />{" "}
             <span className="text-danger">*</span>
@@ -251,9 +228,9 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
               <FormattedMessage id="Invalid name" />
             </small>
           )}
-        </FormGroup>
+        </FormGroup> */}
 
-        <FormGroup>
+        {/* <FormGroup>
           <Label for="password">
             <FormattedMessage id="Mật khẩu lớp học" />{" "}
             <span className="text-danger">*</span>
@@ -274,7 +251,7 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
           <small className="text-danger">
             {errors?.password && errors.password.message}
           </small>
-        </FormGroup>
+        </FormGroup> */}
 
         <FormGroup>
           <Label>
@@ -320,25 +297,25 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
           </small>
         </FormGroup>
 
-        <FormGroup>
+        {/* <FormGroup>
           <Label>
             <FormattedMessage id="Môn học" />{" "}
             <span className="text-danger">*</span>
           </Label>
           <Controller
             control={control}
-            name="subjectId"
+            name="courseId"
             render={({ field }) => {
               return (
                 <Select
-                  id="subjectId"
+                  id="courseId"
                   innerRef={register}
-                  name="subjectId"
+                  name="courseId"
                   className={classnames(
                     "react-select",
                     !changeSelect
                       ? {
-                          "is-invalid": errors["subjectId"],
+                          "is-invalid": errors["courseId"],
                         }
                       : ""
                   )}
@@ -352,17 +329,17 @@ const SidebarAdd = ({ open, toggleSidebar, intl, disable, setDisable }) => {
                   classNamePrefix="select"
                   {...field}
                   onChange={(e) => {
-                    setError("subjectId", "");
-                    setValue("subjectId", e?.value);
+                    setError("courseId", "");
+                    setValue("courseId", e?.value);
                   }}
                 />
               );
             }}
           ></Controller>
           <small className="text-danger">
-            {errors?.subjectId && errors.subjectId.message}
+            {errors?.courseId && errors.courseId.message}
           </small>
-        </FormGroup>
+        </FormGroup> */}
 
         <FormGroup>
           <Label for="description">

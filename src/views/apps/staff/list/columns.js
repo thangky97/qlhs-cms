@@ -17,6 +17,15 @@ const statusObj = {
   },
 };
 
+const roleOptions = {
+  MANAGE_SYSTEM: {
+    text: <FormattedMessage id="Management System" />,
+  },
+  MANAGE_STAFF: {
+    text: <FormattedMessage id="Staff" />,
+  },
+};
+
 export const columns = [
   {
     name: <FormattedMessage id="lastName" />,
@@ -51,6 +60,15 @@ export const columns = [
     minWidth: "170px",
     selector: "phone",
     cell: (row) => <span className="text-capitalize">{row.phone}</span>,
+  },
+  {
+    name: <FormattedMessage id="role" />,
+    minWidth: "170px",
+    selector: "phone",
+    cell: (row) => {
+      // Sử dụng return để trả về JSX
+      return <span>{roleOptions[row?.role]?.text}</span>;
+    },
   },
   {
     name: <FormattedMessage id="status" />,

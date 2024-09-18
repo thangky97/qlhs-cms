@@ -107,11 +107,6 @@ const ListSetting = () => {
         <TabContent activeTab={activeTab}>
           <TabPane tabId="4">{activeTab == "4" && <TabTerms />}</TabPane>
         </TabContent>
-        <TabContent activeTab={activeTab}>
-          <TabPane tabId="5">
-            {activeTab == "5" && <TabCompanyInformation />}
-          </TabPane>
-        </TabContent>
       </CardBody>
     </div>
   );

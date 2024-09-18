@@ -574,5 +574,23 @@ const validateOptions = {
       required: <FormattedMessage id="Tên môn học là bắt buộc" />,
     },
   },
+
+  ClassroomOptions: {
+    name: {
+      required: <FormattedMessage id="Tên phòng học là bắt buộc" />,
+    },
+    // area: {
+    //   required: <FormattedMessage id="Tên khu là bắt buộc" />,
+    // },
+  },
+
+  DepartmentOptions: {
+    name: {
+      required: <FormattedMessage id="Tên bộ môn là bắt buộc" />,
+    },
+    // area: {
+    //   required: <FormattedMessage id="Tên khu là bắt buộc" />,
+    // },
+  },
 };
 export default validateOptions;

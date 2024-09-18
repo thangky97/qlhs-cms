@@ -27,6 +27,10 @@ import userTokenDetail from "../../views/apps/user-token-detail/store/reducer";
 import transactionsToken from "../../views/apps/transactionToken/store/reducer";
 import courses from "../../views/apps/course/store/reducer";
 
+import classrooms from "../../views/apps/classroom/store/reducer";
+
+import department from "../../views/apps/department/store/reducer";
+
 import auth from "./auth";
 import common from "./common";
 import layout from "./layout";
@@ -59,6 +63,8 @@ const rootReducer = combineReducers({
   userTokenDetail,
   transactionsToken,
   courses,
+  classrooms,
+  department,
 });
 
 export default rootReducer;

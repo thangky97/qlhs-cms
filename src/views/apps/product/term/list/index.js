@@ -31,6 +31,7 @@ import {
 } from "../store/action";
 import Sidebar from "./Sidebar";
 import Select from "react-select";
+import { STAFF_ROLE } from "../../../../../constants/app";
 
 const CustomHeader = ({ toggleSidebar }) => {
   return (
@@ -104,37 +105,36 @@ const TermList = ({ intl }) => {
       sortable: false,
       cell: (row) => row?.title,
     },
-    {
-      name: <FormattedMessage id="Số học sinh" />,
-      minWidth: "7%",
-      selector: "number_students",
-      sortable: false,
-      cell: (row) => row?.number_students,
-    },
-    {
-      name: <FormattedMessage id="Ngày giờ" />,
-      minWidth: "10%",
-      selector: "time",
-      sortable: false,
-      cell: (row) => {
-        return `${row?.time || ""} ${row?.date || ""}`;
-      },
-    },
+    // {
+    //   name: <FormattedMessage id="Số học sinh" />,
+    //   minWidth: "7%",
+    //   selector: "number_students",
+    //   sortable: false,
+    //   cell: (row) => row?.number_students,
+    // },
+    // {
+    //   name: <FormattedMessage id="Ngày giờ" />,
+    //   minWidth: "10%",
+    //   selector: "time",
+    //   sortable: false,
+    //   cell: (row) => {
+    //     return `${row?.time || ""} ${row?.date || ""}`;
+    //   },
+    // },
     {
       name: <FormattedMessage id="Giảng viên" />,
       minWidth: "15%",
-      selector: "instructorId",
+      selector: "staffId",
       sortable: false,
-      cell: (row) =>
-        row?.instructor?.last_name + " " + row?.instructor?.first_name,
+      cell: (row) => row?.staff?.last_name + " " + row?.staff?.first_name,
     },
-    {
-      name: <FormattedMessage id="Môn học" />,
-      minWidth: "15%",
-      selector: "subjectId",
-      sortable: false,
-      cell: (row) => row?.course?.name,
-    },
+    // {
+    //   name: <FormattedMessage id="Môn học" />,
+    //   minWidth: "15%",
+    //   selector: "courseId",
+    //   sortable: false,
+    //   cell: (row) => row?.course?.name,
+    // },
     // {
     //   name: <FormattedMessage id="Description" />,
     //   minWidth: "30%",
@@ -259,16 +259,15 @@ const TermList = ({ intl }) => {
     dispatch(
       getInstractors({
         filter: {
-          // status: 1,
+          status: 1,
+          role: STAFF_ROLE.MANAGE_STAFF,
         },
         skip: (currentPage - 1) * rowsPerPage,
         limit: 20,
-        order: [
-          {
-            key: "id",
-            value: "desc",
-          },
-        ],
+        order: {
+          key: "createdAt",
+          value: "desc",
+        },
       })
     );
   }, [dispatch]);

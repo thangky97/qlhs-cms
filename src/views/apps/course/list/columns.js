@@ -27,7 +27,15 @@ export const columns = [
     minWidth: "150px",
     selector: "description",
     sortable: false,
-    cell: (row) => row?.description || "",
+    cell: (row) => {
+      return (
+        <span
+          dangerouslySetInnerHTML={{
+            __html: row?.description,
+          }}
+        ></span>
+      );
+    },
   },
   {
     name: <FormattedMessage id="status" />,

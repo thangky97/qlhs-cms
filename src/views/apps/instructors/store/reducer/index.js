@@ -1,52 +1,48 @@
-import { useHistory } from "react-router-dom";
-
-// ** Initial State
 const initialState = {
   allData: [],
+  data: [],
   dataExport: [],
   total: 1,
-  selectedInstructors: null,
-  statusCode: 0,
+  params: {},
+  selected: null,
 };
 
-const instructors = (state = initialState, action) => {
+const staffs = (state = initialState, action) => {
   switch (action.type) {
-    case "GET_DATA_INSTRUCTORS":
+    case "GET_DATA_STAFF":
       return {
         ...state,
-        allData: action.data.data,
-        total: action.data.total,
-        selectedInstructors: null,
-        status: 0,
+        data: action.data,
+        total: action.totalPages,
+        params: action.params,
+        status: null,
+        err: null,
       };
-
-    case "GET_DATA_EXPORT_INSTRUCTORS":
+    case "GET_DATA_EXPORT_STAFF":
       return {
         ...state,
-        dataExport: action.data.data,
+        dataExport: action.data,
       };
-
-    case "GET_DETTAL_INSTRUCTORS":
-      return { ...state, selectedInstructors: action.data };
-
-    case "UPDATE_INSTRUCTORS":
+    case "GET_STAFF":
+      return { ...state, selected: action.selected };
+    case "ADD_STAFF":
       return {
         ...state,
-        status: action?.data,
+        status: action.response?.statusCode,
         type: action.type,
         err: action.err,
       };
-
-    case "ADD_INSTRUCTORS":
+    case "UPDATE_STAFF":
       return {
         ...state,
-        status: action?.data,
+        status: action.response?.statusCode,
         type: action.type,
         err: action.err,
       };
-
+    case "DELETE_STAFF":
+      return { ...state };
     default:
       return { ...state };
   }
 };
-export default instructors;
+export default staffs;

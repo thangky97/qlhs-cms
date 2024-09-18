@@ -512,6 +512,7 @@ const api = {
     method: "POST",
   },
 
+  //api môn học
   LIST_COURSE: {
     path: "/course/get-list",
     method: "POST",
@@ -526,6 +527,42 @@ const api = {
   },
   UPDATE_COURSE: {
     path: "/course/update",
+    method: "POST",
+  },
+
+  //api phòng học
+  LIST_CLASSROOM: {
+    path: "/classroom/get-list",
+    method: "POST",
+  },
+  CREATE_CLASSROOM: {
+    path: "/classroom/insert",
+    method: "POST",
+  },
+  GET_CLASSROOM_DETAIL: {
+    path: "/classroom/get-detail",
+    method: "GET",
+  },
+  UPDATE_CLASSROOM: {
+    path: "/classroom/update",
+    method: "POST",
+  },
+
+  //api bộ môn
+  LIST_DEPARTMENT: {
+    path: "/department/get-list",
+    method: "POST",
+  },
+  CREATE_DEPARTMENT: {
+    path: "/department/insert",
+    method: "POST",
+  },
+  GET_DEPARTMENT_DETAIL: {
+    path: "/department/get-detail",
+    method: "GET",
+  },
+  UPDATE_DEPARTMENT: {
+    path: "/department/update",
     method: "POST",
   },
 };

@@ -1,23 +1,21 @@
 import ExtensionsHeader from "@components/extensions-header";
+import "@styles/react/libs/react-select/_react-select.scss";
 import { useEffect, useState } from "react";
 import { FormattedMessage, injectIntl } from "react-intl";
-import Select from "react-select";
-import avatarBlank from "./../../../../assets/images/avatars/avatar-blank.png";
-import Sidebar from "./Sidebar";
-import { columns } from "./columns";
 import { useDispatch, useSelector } from "react-redux";
-import { getData, getDataExport, getDataByProductId } from "../store/action";
+import { getData, getDataExport } from "../store/action";
+
+import Select from "react-select";
+import { columns } from "./columns";
+import Sidebar from "./Sidebar";
 
 import DataTable from "react-data-table-component";
 import { ChevronDown } from "react-feather";
 import ReactPaginate from "react-paginate";
-import { Button, Card, CardBody, Col, Input, Row } from "reactstrap";
-
-import "@styles/react/libs/react-select/_react-select.scss";
-import "@styles/react/libs/tables/react-dataTable-component.scss";
 import { toast } from "react-toastify";
-import { getData as getDataCourse } from "../../product/store/action";
+import { Button, Card, CardBody, Col, Input, Row } from "reactstrap";
 import XLSX from "xlsx";
+import { STAFF_ROLE } from "./../../../../constants/app";
 
 const CustomHeader = ({ toggleSidebar, exportToExcel }) => {
   return (
@@ -39,94 +37,47 @@ const CustomHeader = ({ toggleSidebar, exportToExcel }) => {
   );
 };
 
-const UserList = ({ intl }) => {
+const StaffList = ({ intl }) => {
   const dispatch = useDispatch();
-  const store = useSelector((state) => state.users);
-  const course = useSelector((state) => state.products);
-  const [phoneNumber, setPhoneNumber] = useState();
-  const lang = useSelector((state) => state.common.language);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const store = useSelector((state) => state.staffs);
+  const [searchPhone, setSearchPhone] = useState("");
+  const [disable, setDisable] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [avatar, setAvatar] = useState(avatarBlank);
-  const [searchLastName, setSearchLastName] = useState(null);
-  const [searchFirstName, setSearchFirstName] = useState(null);
-  const [disable, setDisable] = useState(false);
-  const [productOptions, setProductOptions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loadData, setLoadData] = useState(false);
   const [filterStatus, setFilterStatus] = useState({
     value: "",
     label: <FormattedMessage id="status" />,
   });
-  const optionProductValue = {
-    value: "",
-    label: <FormattedMessage id="Course" />,
-  };
-  const [checkFilterProduct, setCheckFilterProduct] = useState(false);
-  const [filterProduct, setFilterProduct] = useState(optionProductValue);
-  const [searchUsername, setSearchUsername] = useState(null);
-  const [searchEmail, setSearchEmail] = useState(null);
-  const [searchPhone, setSearchPhone] = useState(null);
-
-  const [loadData, setLoadData] = useState(false);
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
     setDisable(false);
-    setPhoneNumber("");
+    setPhoneNumber(" ");
+    setInvalidPhone(false);
   };
+  const [searchLastName, setSearchLastName] = useState(null);
+  const [searchFirstName, setSearchFirstName] = useState(null);
+  const [invalidPhone, setInvalidPhone] = useState(false);
 
+  const [filterRole, setFilterRolte] = useState(null);
+  const [searchEmail, setSearchEmail] = useState(null);
   useEffect(() => {
     dispatch(
-      getDataCourse({
+      getData({
         filter: {
-          lang: lang,
-          product_type: 0,
-          status: 1,
+          phone: searchPhone || undefined,
+          status: filterStatus?.value || undefined,
+          last_name: searchLastName || undefined,
+          first_name: searchFirstName || undefined,
+          roleId: filterRole?.value || undefined,
+          email: searchEmail || undefined,
+          role: STAFF_ROLE.MANAGE_USER,
         },
-        order: [{ key: "id", value: "ASC" }],
-      })
-    );
-  }, [lang]);
-
-  useEffect(() => {
-    if (course?.data?.length > 0) {
-      setProductOptions([]);
-      course?.data.forEach((item) => {
-        setProductOptions((state) => [
-          ...state,
-          {
-            value: item?.id || null,
-            label: item?.product_names[0]?.name || "",
-          },
-        ]);
-      });
-    }
-  }, [course?.data]);
-
-  useEffect(() => {
-    if (!filterProduct.value) {
-      dispatch(
-        getData({
-          filter: {
-            status: filterStatus.value || undefined,
-            username: searchUsername || undefined,
-            last_name: searchLastName || undefined,
-            first_name: searchFirstName || undefined,
-            email: searchEmail || undefined,
-            phone: searchPhone || undefined,
-          },
-          skip: (currentPage - 1) * rowsPerPage,
-          limit: rowsPerPage,
-          order: {
-            key: "createdAt",
-            value: "desc",
-          },
-        })
-      );
-    }
-    dispatch(
-      getDataExport({
-        filter: {},
+        skip: (currentPage - 1) * rowsPerPage,
+        limit: rowsPerPage,
         order: {
           key: "createdAt",
           value: "desc",
@@ -136,37 +87,20 @@ const UserList = ({ intl }) => {
   }, [loadData, currentPage, rowsPerPage]);
 
   useEffect(() => {
-    setCheckFilterProduct(false);
-    if (filterProduct.value) {
-      setCheckFilterProduct(true);
-      dispatch(
-        getDataByProductId(
-          {
-            filter: {
-              status: filterStatus.value || undefined,
-              username: searchUsername || undefined,
-              last_name: searchLastName || undefined,
-              first_name: searchFirstName || undefined,
-              email: searchEmail || undefined,
-              phone: searchPhone || undefined,
-            },
-            skip: (currentPage - 1) * rowsPerPage,
-            limit: rowsPerPage,
-            order: {
-              key: "createdAt",
-              value: "desc",
-            },
-          },
-          filterProduct.value,
-          lang
-        )
-      );
-    }
-  }, [loadData]);
+    dispatch(
+      getDataExport({
+        filter: {},
+        order: {
+          key: "createdAt",
+          value: "desc",
+        },
+      })
+    );
+  }, [store.status]);
 
   useEffect(() => {
     switch (store?.type) {
-      case "ADD_USER":
+      case "ADD_STAFF":
         if (store?.status == 200) {
           toast.success(<FormattedMessage id={"successfully added new!"} />);
           setLoadData(!loadData);
@@ -174,14 +108,16 @@ const UserList = ({ intl }) => {
         } else if (store?.status == 400) {
           toast.warn(<FormattedMessage id={"Add new failure!"} />);
         }
+
         break;
-      case "UPDATE_USER":
+      case "UPDATE_STAFF":
         if (store?.status == 200) {
           toast.success(<FormattedMessage id={"Update successful!"} />);
           setLoadData(!loadData);
         } else if (store?.status == 400) {
           toast.warn(<FormattedMessage id={"Update failed!"} />);
         }
+
         break;
 
       default:
@@ -198,9 +134,13 @@ const UserList = ({ intl }) => {
 
   const handlePerPage = (e) => {
     const value = parseInt(e.currentTarget.value);
+
     setRowsPerPage(value);
   };
 
+  const handleSearchPhone = (val) => {
+    setSearchPhone(val);
+  };
   const count = Number(Math.ceil(store.total / rowsPerPage));
 
   const dataToRender = () => {
@@ -212,49 +152,40 @@ const UserList = ({ intl }) => {
   const exportToExcel = () => {
     if (store?.dataExport?.length > 0) {
       const data = store?.dataExport;
-
       const cols = [
         { header: "ID", key: "id" },
-        { header: "Tên tài khoản", key: "username" },
+        { header: "Tài khoản", key: "username" },
         { header: "Email", key: "email" },
         { header: "Họ", key: "first_name" },
         { header: "Tên", key: "last_name" },
         { header: "Số điện thoại", key: "phone" },
-        { header: "Địa chỉ", key: "address" },
-        { header: "Ảnh đại diện", key: "avatar" },
+        { header: "Vai trò", key: "role" },
         { header: "Trạng thái", key: "status" },
+        { header: "Ngày tạo", key: "createdAt" },
       ];
+      const mappedData = data.map((item) =>
+        Object.fromEntries(
+          Object.entries(item).map(([key, val]) => {
+            return [cols.find((col) => col.key === key)?.header || key, val];
+          })
+        )
+      );
 
-      const worksheet = XLSX.utils.json_to_sheet({
+      const worksheet = XLSX.utils.json_to_sheet(mappedData, {
         header: cols.map((col) => col.header),
       });
-
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Học viên");
-      XLSX.writeFile(workbook, "student.xlsx");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Nhân viên");
+      XLSX.writeFile(workbook, "staff.xlsx");
     }
   };
 
   return (
     <div className="app-user-list">
-      <ExtensionsHeader title={<FormattedMessage id="User" />} />
+      <ExtensionsHeader title={<FormattedMessage id="Học sinh" />} />
       <Card>
         <CardBody>
           <Row>
-            <Col md="4">
-              <Select
-                isClearable={false}
-                isSearchable={true}
-                className="react-select text-color:red"
-                classNamePrefix="select"
-                options={[optionProductValue, ...productOptions]}
-                value={filterProduct}
-                onChange={(data) => {
-                  setFilterProduct(data);
-                }}
-              />
-            </Col>
-
             <Col md="4">
               <Select
                 isClearable={false}
@@ -298,8 +229,8 @@ const UserList = ({ intl }) => {
                 placeholder={intl.formatMessage({ id: "Email" })}
                 type="text"
                 value={searchEmail}
-                onChange={(e) => {
-                  setSearchEmail(e.target.value);
+                onChange={(data) => {
+                  setSearchEmail(data.target.value);
                 }}
               />
             </Col>
@@ -310,8 +241,8 @@ const UserList = ({ intl }) => {
                 placeholder={intl.formatMessage({ id: "phoneNumber" })}
                 type="text"
                 value={searchPhone}
-                onChange={(e) => {
-                  setSearchPhone(e.target.value);
+                onChange={(data) => {
+                  setSearchPhone(data.target.value);
                 }}
               />
             </Col>
@@ -332,9 +263,11 @@ const UserList = ({ intl }) => {
       <Card>
         <DataTable
           noHeader
+          highlightOnHover
           subHeader
           responsive
-          highlightOnHover
+          paginationServer
+          columns={columns}
           noDataComponent={
             <div className="sc-fznWqX gnahTY">
               <div className="sc-AxjAm gIMaKV rdt_Table" role="table">
@@ -353,18 +286,17 @@ const UserList = ({ intl }) => {
               </div>
             </div>
           }
-          paginationServer
-          columns={columns}
           sortIcon={<ChevronDown />}
           className="react-dataTable"
           data={dataToRender()}
           subHeaderComponent={
             <CustomHeader
-              filterProduct={filterProduct}
               toggleSidebar={toggleSidebar}
               handlePerPage={handlePerPage}
               rowsPerPage={rowsPerPage}
-              searchTerm={searchTerm}
+              searchPhone={searchPhone}
+              handleSearchPhone={handleSearchPhone}
+              setSearchPhone={setSearchPhone}
               exportToExcel={exportToExcel}
             />
           }
@@ -393,16 +325,16 @@ const UserList = ({ intl }) => {
         open={sidebarOpen}
         toggleSidebar={toggleSidebar}
         {...{
-          avatar,
-          setAvatar,
           disable,
           setDisable,
           phoneNumber,
           setPhoneNumber,
+          invalidPhone,
+          setInvalidPhone,
         }}
       />
     </div>
   );
 };
 
-export default injectIntl(UserList);
+export default injectIntl(StaffList);

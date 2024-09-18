@@ -17,6 +17,7 @@ import Select from "react-select";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { scrollToTop } from "./../../../../../utility/Utils";
+import { STAFF_ROLE } from "../../../../../constants/app";
 
 const TermTab = ({ selected, intl }) => {
   const dispatch = useDispatch();
@@ -43,8 +44,8 @@ const TermTab = ({ selected, intl }) => {
     label: store?.courseDetail?.name,
   };
   const instructorOption = {
-    value: termData?.instructor?.id,
-    label: `${termData?.instructor?.last_name}  ${termData?.instructor?.first_name}`,
+    value: termData?.staff?.id,
+    label: `${termData?.staff?.last_name}  ${termData?.staff?.first_name}`,
   };
 
   const termValidate = yup.object({
@@ -57,25 +58,25 @@ const TermTab = ({ selected, intl }) => {
     title: yup
       .string()
       .required(<FormattedMessage id="Tên lớp học là bắt buộc" />),
-    number_students: yup
-      .string()
-      .required(<FormattedMessage id="Số học sinh là bắt buộc" />),
-    time: yup
-      .string()
-      .required(<FormattedMessage id="The time study field is required" />),
-    date: yup
-      .string()
-      .required(<FormattedMessage id="The school day field is required" />),
-    password: yup
-      .string()
-      .matches(/^[a-zA-Z0-9]*$/, {
-        message: <FormattedMessage id="validate field code" />,
-      })
-      .required(<FormattedMessage id="Mật khẩu lớp học là bắt buộc" />),
+    // number_students: yup
+    //   .string()
+    //   .required(<FormattedMessage id="Số học sinh là bắt buộc" />),
+    // time: yup
+    //   .string()
+    //   .required(<FormattedMessage id="The time study field is required" />),
+    // date: yup
+    //   .string()
+    //   .required(<FormattedMessage id="The school day field is required" />),
+    // password: yup
+    //   .string()
+    //   .matches(/^[a-zA-Z0-9]*$/, {
+    //     message: <FormattedMessage id="validate field code" />,
+    //   })
+    //   .required(<FormattedMessage id="Mật khẩu lớp học là bắt buộc" />),
     // instructorId: yup
     //   .number()
     //   .required(<FormattedMessage id="Vui lòng chọn môn học" />),
-    // subjectId: yup
+    // courseId: yup
     //   .number()
     //   .required(<FormattedMessage id="Vui lòng chọn môn học" />),
   });
@@ -129,15 +130,16 @@ const TermTab = ({ selected, intl }) => {
     );
     dispatch(
       getInstractors({
-        filter: {},
+        filter: {
+          status: 1,
+          role: STAFF_ROLE.MANAGE_STAFF,
+        },
         skip: 0,
         limit: 20,
-        order: [
-          {
-            key: "id",
-            value: "desc",
-          },
-        ],
+        order: {
+          key: "createdAt",
+          value: "desc",
+        },
       })
     );
   }, [dispatch]);
@@ -152,12 +154,12 @@ const TermTab = ({ selected, intl }) => {
             code: values.code,
             productId: productId,
             title: values.title,
-            number_students: values?.number_students,
-            time: values?.time,
-            date: values?.date,
-            password: values?.password,
+            number_students: values?.number_students || null,
+            time: values?.time || null,
+            date: values?.date || null,
+            password: values?.password || null,
             instructorId: parseInt(InstractorValue?.value),
-            subjectId: parseInt(changeSelectSubject?.value),
+            courseId: parseInt(changeSelectSubject?.value) || null,
             description: values.description || "",
             status: values.status,
             lang: lang,
@@ -176,8 +178,8 @@ const TermTab = ({ selected, intl }) => {
   }, [store.status, history, id]);
 
   useEffect(() => {
-    dispatch(getDetailCourse(selected?.subjectId));
-  }, [dispatch, selected?.subjectId]);
+    dispatch(getDetailCourse(selected?.courseId));
+  }, [dispatch, selected?.courseId]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -234,7 +236,7 @@ const TermTab = ({ selected, intl }) => {
         </small>
       </FormGroup>
 
-      <FormGroup>
+      {/* <FormGroup>
         <Label for="number_students">
           <FormattedMessage id="Số học sinh" />{" "}
           <span className="text-danger">*</span>
@@ -256,32 +258,9 @@ const TermTab = ({ selected, intl }) => {
         <small className="text-danger">
           {errors?.number_students && errors.number_students.message}
         </small>
-      </FormGroup>
+      </FormGroup> */}
 
       {/* <FormGroup>
-          <Label for="termContent">
-            <FormattedMessage id="Content" />{" "}
-            <span className="text-danger"></span>
-          </Label>
-          <Editor
-            toolbar={{
-              image: { uploadCallback: uploadCallback },
-            }}
-            stripPastedStyles={true}
-            name="termContent"
-            editorState={termContent}
-            onEditorStateChange={(data) => setContent(data)}
-            innerRef={register(TermOptions.content)}
-            wrapperClassName="content_term"
-            editorClassName="editor-class"
-            toolbarClassName="toolbar-class"
-          />
-          <small className="text-danger">
-            {errors?.content && errors.content.message}
-          </small>
-        </FormGroup> */}
-
-      <FormGroup>
         <Label for="time">
           <FormattedMessage id="time" /> <span className="text-danger">*</span>
         </Label>
@@ -308,9 +287,9 @@ const TermTab = ({ selected, intl }) => {
             <FormattedMessage id="Invalid name" />
           </small>
         )}
-      </FormGroup>
+      </FormGroup> */}
 
-      <FormGroup>
+      {/* <FormGroup>
         <Label for="date">
           <FormattedMessage id="school day" />{" "}
           <span className="text-danger">*</span>
@@ -338,9 +317,9 @@ const TermTab = ({ selected, intl }) => {
             <FormattedMessage id="Invalid name" />
           </small>
         )}
-      </FormGroup>
+      </FormGroup> */}
 
-      <FormGroup>
+      {/* <FormGroup>
         <Label for="password">
           <FormattedMessage id="Mật khẩu lớp học" />{" "}
           <span className="text-danger">*</span>
@@ -361,51 +340,6 @@ const TermTab = ({ selected, intl }) => {
         />
         <small className="text-danger">
           {errors?.password && errors.password.message}
-        </small>
-      </FormGroup>
-
-      {/* <FormGroup>
-        <Label>
-          <FormattedMessage id="instructors" />{" "}
-          <span className="text-danger">*</span>
-        </Label>
-        <Controller
-          control={control}
-          name="instructorId"
-          render={({ field }) => {
-            return (
-              <Select
-                id="instructorId"
-                innerRef={register}
-                name="instructorId"
-                value={InstractorValue}
-                className={classnames(
-                  "react-select",
-                  !changeSelect
-                    ? {
-                        "is-invalid": errors["instructorId"],
-                      }
-                    : ""
-                )}
-                options={instractors?.map((item, index) => {
-                  return {
-                    value: item?.id,
-                    label: `${item?.last_name} ${item?.first_name}`,
-                    number: index + 1,
-                  };
-                })}
-                classNamePrefix="select"
-                {...field}
-                onChange={(e) => {
-                  setError("instructorId", "");
-                  setValue("instructorId", e?.value);
-                }}
-              />
-            );
-          }}
-        ></Controller>
-        <small className="text-danger">
-          {errors?.instructorId && errors.instructorId.message}
         </small>
       </FormGroup> */}
 
@@ -433,7 +367,7 @@ const TermTab = ({ selected, intl }) => {
           {errors?.instructorId && errors.instructorId.message}
         </small>
       </FormGroup>
-
+      {/* 
       <FormGroup>
         <Label>
           <FormattedMessage id="Môn học" />{" "}
@@ -443,7 +377,7 @@ const TermTab = ({ selected, intl }) => {
           isClearable={false}
           onChange={(e) => setChangeSelectSubject(e)}
           innerRef={register({ required: true })}
-          name="subjectId"
+          name="courseId"
           value={changeSelectSubject}
           placeholder={<FormattedMessage id="Select..." />}
           options={courses?.map((item, index) => {
@@ -457,9 +391,9 @@ const TermTab = ({ selected, intl }) => {
           classNamePrefix="select"
         />
         <small className="text-danger">
-          {errors?.subjectId && errors.subjectId.message}
+          {errors?.courseId && errors.courseId.message}
         </small>
-      </FormGroup>
+      </FormGroup> */}
 
       <FormGroup>
         <Label for="description">

@@ -15,6 +15,7 @@ import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Input, Row } from "reactstrap";
 import XLSX from "xlsx";
+import { STAFF_ROLE } from "../../../../constants/app";
 
 const CustomHeader = ({ toggleSidebar, exportToExcel }) => {
   return (
@@ -73,6 +74,7 @@ const StaffList = ({ intl }) => {
           first_name: searchFirstName || undefined,
           roleId: filterRole?.value || undefined,
           email: searchEmail || undefined,
+          role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
         },
         skip: (currentPage - 1) * rowsPerPage,
         limit: rowsPerPage,

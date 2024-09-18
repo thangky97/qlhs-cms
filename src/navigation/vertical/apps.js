@@ -5,6 +5,8 @@ import {
   UserPlus,
   Bell,
   BookOpen,
+  Briefcase,
+  Table,
 } from "react-feather";
 import { STAFF_ROLE } from "../../constants/app";
 export default [
@@ -13,20 +15,23 @@ export default [
     title: "System staff",
     icon: <Users size={20} />,
     navLink: "/apps/staff/list",
-    role: STAFF_ROLE.MANAGE_SYSTEM,
+    // role: STAFF_ROLE.MANAGE_SYSTEM,
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
   },
-  {
-    id: "Instructors",
-    title: "Instructors",
-    icon: <UserPlus size={20} />,
-    navLink: "/apps/instructors/list",
-    role: STAFF_ROLE.MANAGE_USER,
-  },
+  // {
+  //   id: "Instructors",
+  //   title: "Instructors",
+  //   icon: <UserPlus size={20} />,
+  //   navLink: "/apps/instructors/list",
+  //   role: STAFF_ROLE.MANAGE_USER,
+  // },
   {
     id: "products",
     title: "Product_Course",
     icon: <ShoppingCart size={20} />,
     navLink: "/apps/product/list",
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
     role: STAFF_ROLE.MANAGE_STAFF,
   },
   {
@@ -34,6 +39,23 @@ export default [
     title: "Môn học",
     icon: <BookOpen size={20} />,
     navLink: "/apps/subject/list",
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
+  },
+  {
+    id: "classroom",
+    title: "Phòng học",
+    icon: <Table size={20} />,
+    navLink: "/apps/classroom/list",
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
+  },
+  {
+    id: "department",
+    title: "Bộ môn",
+    icon: <Briefcase size={20} />,
+    navLink: "/apps/department/list",
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
     role: STAFF_ROLE.MANAGE_STAFF,
   },
   {
@@ -41,13 +63,15 @@ export default [
     title: "User",
     icon: <User size={20} />,
     navLink: "/apps/user/list",
-    role: STAFF_ROLE.MANAGE_USER,
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
   },
   {
     id: "notification",
     title: "Notification",
     icon: <Bell size={20} />,
     navLink: "/apps/notification/list",
-    role: STAFF_ROLE.MANAGE_USER,
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
   },
 ];

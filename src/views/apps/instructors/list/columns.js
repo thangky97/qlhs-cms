@@ -1,7 +1,5 @@
-import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-import Image from "../../../../assets/images/avatars/9.png";
-
+import { Link } from "react-router-dom";
 import { Badge } from "reactstrap";
 
 const statusObj = {
@@ -14,56 +12,49 @@ const statusObj = {
     text: <FormattedMessage id="Deactive" />,
   },
   2: {
-    class: "light-secondary",
-
+    class: "light-danger",
     text: <FormattedMessage id="Blocked" />,
   },
 };
 
 export const columns = [
   {
-    name: <FormattedMessage id="Image" />,
-    minWidth: "150px",
-    selector: "instructor_image",
-    sortable: false,
-    cell: (row) => (
-      <div class="avatar me-1" width="32" height="32">
-        <img src={row.instructor_image} alt={Image} width="32" height="32" />
-      </div>
-    ),
-  },
-  {
     name: <FormattedMessage id="lastName" />,
-    minWidth: "150px",
-    selector: "lastName",
+    minWidth: "100px",
+    selector: "last_name",
     sortable: false,
-    cell: (row) => row.last_name || "",
+    cell: (row) => row.last_name,
   },
   {
     name: <FormattedMessage id="firstName" />,
-    minWidth: "150px",
-    selector: "firstName",
+    minWidth: "100px",
+    selector: "first_name",
     sortable: false,
-    cell: (row) => row.first_name || "",
+    cell: (row) => row.first_name,
+  },
+  {
+    name: <FormattedMessage id="username" />,
+    minWidth: "170px",
+    selector: "username",
+    sortable: false,
+    cell: (row) => row.username,
   },
   {
     name: <FormattedMessage id="Email" />,
-    minWidth: "150px",
-    selector: "contact_email",
+    minWidth: "258px",
+    selector: "email",
     sortable: false,
-    cell: (row) => row.contact_email,
+    cell: (row) => row.email,
   },
   {
     name: <FormattedMessage id="phoneNumber" />,
-    minWidth: "150px",
-    selector: "telephone",
-    sortable: false,
-    cell: (row) => row.telephone,
+    minWidth: "170px",
+    selector: "phone",
+    cell: (row) => <span className="text-capitalize">{row.phone}</span>,
   },
-
   {
     name: <FormattedMessage id="status" />,
-    minWidth: "140px",
+    minWidth: "120px",
     selector: "status",
     sortable: false,
     cell: (row) => (
@@ -78,21 +69,20 @@ export const columns = [
   },
   {
     name: <FormattedMessage id="actions" />,
-    minWidth: "100px",
-
+    minWidth: "130px",
     cell: (row) => {
       return (
         row?.id && (
           <div className="mh-100 d-flex align-items-center justify-content-center mw-100">
-            <Badge className=" w-100" pill color="primary">
+            <Badge
+              className=" w-100"
+              pill
+              color="primary"
+              style={{ padding: "10px 25px" }}
+            >
               <Link
                 className="text-edit hover:text-white"
-                style={{
-                  padding: "7px 20px",
-                  display: "block",
-                  cursor: "pointer",
-                }}
-                to={`/apps/instructors/edit/${row.id}`}
+                to={`/apps/staff/edit/${row.id}`}
               >
                 {" "}
                 <FormattedMessage id="edit" />

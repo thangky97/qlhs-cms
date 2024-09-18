@@ -46,7 +46,7 @@ const terms = (state = initialState, action) => {
       };
 
     //list instractors
-    case "GET_DATA_INSTRACTORS":
+    case "GET_DATA_STAFF":
       return {
         ...state,
         instractors: action.data,
