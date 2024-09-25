@@ -173,7 +173,7 @@ const CourseList = ({ intl }) => {
               />
             </Col>
 
-            <Col md="3">
+            {/* <Col md="3">
               <Select
                 isClearable={false}
                 className="react-select"
@@ -184,7 +184,7 @@ const CourseList = ({ intl }) => {
                   setCurrentStatus(data);
                 }}
               />
-            </Col>
+            </Col> */}
 
             <Col md="3">
               <Button color="primary" className="m-0" onClick={filterData}>

@@ -16,56 +16,56 @@ const statusObj = {
 
 export const columns = [
   {
-    name: <FormattedMessage id="Bộ môn" />,
+    name: <FormattedMessage id="Mã" />,
+    minWidth: "150px",
+    selector: "code",
+    sortable: false,
+    cell: (row) => row?.code,
+  },
+  {
+    name: <FormattedMessage id="Nghành" />,
     minWidth: "150px",
     selector: "name",
     sortable: false,
     cell: (row) => row?.name,
   },
   {
-    name: <FormattedMessage id="Giảng viên" />,
+    name: <FormattedMessage id="training_program" />,
     minWidth: "150px",
-    selector: "usersId",
+    selector: "trainingProgramId",
     sortable: false,
-    cell: (row) => row?.staff?.last_name + " " + row?.staff?.first_name,
+    cell: (row) => row?.training_program?.name,
   },
   {
-    name: <FormattedMessage id="Chức vụ" />,
+    name: <FormattedMessage id="description" />,
     minWidth: "150px",
-    selector: "position",
+    selector: "description",
     sortable: false,
-    cell: (row) => row?.position,
+    cell: (row) => {
+      return (
+        <span
+          dangerouslySetInnerHTML={{
+            __html: row?.description,
+          }}
+        ></span>
+      );
+    },
   },
   // {
-  //   name: <FormattedMessage id="description" />,
-  //   minWidth: "150px",
-  //   selector: "description",
+  //   name: <FormattedMessage id="status" />,
+  //   minWidth: "140px",
+  //   selector: "status",
   //   sortable: false,
-  //   cell: (row) => {
-  //     return (
-  //       <span
-  //         dangerouslySetInnerHTML={{
-  //           __html: row?.description,
-  //         }}
-  //       ></span>
-  //     );
-  //   },
+  //   cell: (row) => (
+  //     <Badge
+  //       className="text-capitalize"
+  //       color={statusObj[row.status]?.class}
+  //       pill
+  //     >
+  //       {statusObj[row.status]?.text}
+  //     </Badge>
+  //   ),
   // },
-  {
-    name: <FormattedMessage id="status" />,
-    minWidth: "140px",
-    selector: "status",
-    sortable: false,
-    cell: (row) => (
-      <Badge
-        className="text-capitalize"
-        color={statusObj[row.status]?.class}
-        pill
-      >
-        {statusObj[row.status]?.text}
-      </Badge>
-    ),
-  },
   {
     name: <FormattedMessage id="actions" />,
     minWidth: "100px",

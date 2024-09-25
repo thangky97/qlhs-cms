@@ -16,6 +16,13 @@ const statusObj = {
 
 export const columns = [
   {
+    name: <FormattedMessage id="Mã môn học" />,
+    minWidth: "150px",
+    selector: "code",
+    sortable: false,
+    cell: (row) => row?.code,
+  },
+  {
     name: <FormattedMessage id="Tên môn học" />,
     minWidth: "150px",
     selector: "name",
@@ -37,21 +44,21 @@ export const columns = [
       );
     },
   },
-  {
-    name: <FormattedMessage id="status" />,
-    minWidth: "140px",
-    selector: "status",
-    sortable: false,
-    cell: (row) => (
-      <Badge
-        className="text-capitalize"
-        color={statusObj[row.status]?.class}
-        pill
-      >
-        {statusObj[row.status]?.text}
-      </Badge>
-    ),
-  },
+  // {
+  //   name: <FormattedMessage id="status" />,
+  //   minWidth: "140px",
+  //   selector: "status",
+  //   sortable: false,
+  //   cell: (row) => (
+  //     <Badge
+  //       className="text-capitalize"
+  //       color={statusObj[row.status]?.class}
+  //       pill
+  //     >
+  //       {statusObj[row.status]?.text}
+  //     </Badge>
+  //   ),
+  // },
   {
     name: <FormattedMessage id="actions" />,
     minWidth: "100px",

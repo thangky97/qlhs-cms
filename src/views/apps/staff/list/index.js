@@ -3,7 +3,7 @@ import "@styles/react/libs/react-select/_react-select.scss";
 import { useEffect, useState } from "react";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
-import { getData, getDataExport } from "../store/action";
+import { getData, getDataDepartment, getDataExport } from "../store/action";
 
 import Select from "react-select";
 import { columns } from "./columns";
@@ -40,6 +40,7 @@ const CustomHeader = ({ toggleSidebar, exportToExcel }) => {
 const StaffList = ({ intl }) => {
   const dispatch = useDispatch();
   const store = useSelector((state) => state.staffs);
+
   const [searchPhone, setSearchPhone] = useState("");
   const [disable, setDisable] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -96,6 +97,19 @@ const StaffList = ({ intl }) => {
         },
       })
     );
+    dispatch(
+      getDataDepartment({
+        filter: {},
+        skip: (currentPage - 1) * rowsPerPage,
+        limit: 20,
+        order: [
+          {
+            key: "id",
+            value: "desc",
+          },
+        ],
+      })
+    );
   }, [store.status]);
 
   useEffect(() => {
@@ -129,7 +143,6 @@ const StaffList = ({ intl }) => {
     { value: "", label: <FormattedMessage id="Select status" /> },
     { value: "0", label: <FormattedMessage id="Deactive" /> },
     { value: "1", label: <FormattedMessage id="Active" /> },
-    { value: "2", label: <FormattedMessage id="Blocked" /> },
   ];
 
   const handlePerPage = (e) => {

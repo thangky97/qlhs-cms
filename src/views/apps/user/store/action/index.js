@@ -94,3 +94,22 @@ export const update = (data) => {
       );
   };
 };
+
+//lớp học - term
+export const getDataCurriulumSection = (params) => {
+  return async (dispatch) => {
+    await Service.send({
+      method: api.LIST_PRODUCT_TERM.method,
+      path: api.LIST_PRODUCT_TERM.path,
+      data: params,
+      method: "POST",
+    }).then((response) => {
+      dispatch({
+        type: "GET_DATA_TERM_PRODUCT",
+        data: response?.data?.data,
+        totalPages: response?.data?.total,
+        params,
+      });
+    });
+  };
+};

@@ -2,7 +2,7 @@ import Sidebar from "@components/sidebar";
 import { isObjEmpty, selectThemeColors } from "@utils";
 import classnames from "classnames";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FormattedMessage, injectIntl } from "react-intl";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -14,6 +14,9 @@ import validateOptions from "../../../../constants/validate";
 import { useEffect, useState } from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { add } from "../store/action";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
 const SidebarAdd = ({
   open,
   toggleSidebar,
@@ -22,12 +25,12 @@ const SidebarAdd = ({
   setDisable,
   phoneNumber,
   setPhoneNumber,
-  invalidPhone,
   setInvalidPhone,
 }) => {
   const dispatch = useDispatch();
   const UserOptions = validateOptions.UserOptions;
   const store = useSelector((state) => state.staffs);
+  const { departments } = useSelector((state) => state.staffs);
   const roleOptions = [
     {
       value: "MANAGE_SYSTEM",
@@ -49,7 +52,20 @@ const SidebarAdd = ({
     },
   ];
 
-  const { register, errors, handleSubmit } = useForm();
+  const departmentValidate = yup.object({
+    departmentId: yup
+      .number()
+      .required(<FormattedMessage id="Vui lòng chọn ban nghành" />),
+  });
+
+  const { register, control, setValue, errors, setError, handleSubmit } =
+    // useForm({
+    //   resolver: yupResolver(departmentValidate),
+    //   mode: "all",
+    // });
+
+    useForm();
+
   const StaffOptions = validateOptions.StaffOptions;
   const [role, setRole] = useState();
 
@@ -58,25 +74,27 @@ const SidebarAdd = ({
       setDisable(false);
     }
   }, [store?.err]);
-  const onSubmit = (values) => {
-    if (invalidPhone) {
-      setInvalidPhone(true);
-      return;
-    }
-    const check = isValidPhoneNumber(phoneNumber);
-    if (!check) {
-      setInvalidPhone(true);
-      return;
-    }
-    if (isObjEmpty(errors) && !invalidPhone) {
+
+  const onSubmit = async (values) => {
+    if (isObjEmpty(errors)) {
       setDisable(true);
-      dispatch(
-        add({
-          ...values,
-          phone: phoneNumber || undefined,
-          role: role || " ",
-        })
-      );
+      try {
+        await dispatch(
+          add({
+            ...values,
+            // phone: values?.phone || undefined,
+            role: role || "",
+            departmentId: parseInt(values?.departmentId),
+            position: values?.position || " ",
+          })
+        );
+        // Thông báo thành công nếu cần
+      } catch (error) {
+        // Thông báo lỗi khi thêm không thành công
+        console.error("Lỗi khi thêm: ", error);
+      } finally {
+        setDisable(false);
+      }
     }
   };
 
@@ -84,7 +102,7 @@ const SidebarAdd = ({
     setRole(e?.map((item) => item.value)?.join(";"));
   };
   useEffect(() => {
-    setRole(["MANAGE_STAFF", "MANAGE_SYSTEM"].join(";"));
+    setRole(["MANAGE_STAFF"].join(";"));
   }, []);
   const handleOnchangePhone = (e) => {
     setPhoneNumber(e);
@@ -264,7 +282,7 @@ const SidebarAdd = ({
           )}
         </FormGroup>
 
-        <FormGroup>
+        {/* <FormGroup>
           <Label for="phone">
             <FormattedMessage id="phoneNumber" />{" "}
             <span className="text-danger">*</span>
@@ -292,7 +310,95 @@ const SidebarAdd = ({
           <small className="text-danger">
             {invalidPhone && <FormattedMessage id="Invalid phone number" />}
           </small>
+        </FormGroup> */}
+
+        <FormGroup>
+          <Label for="phone">
+            <FormattedMessage id="phoneNumber" />{" "}
+            <span className="text-danger">*</span>
+          </Label>
+          <Input
+            type="phone"
+            name="phone"
+            id="phone"
+            placeholder=""
+            innerRef={register(StaffOptions.phone)}
+            onBlur={() => {
+              let phone1 = document.getElementById("phone");
+
+              if (phone1 && phone1.value) {
+                phone1.value = phone1.value.trim();
+              }
+            }}
+            className={classnames({ "is-invalid": errors["phone"] })}
+          />
+          <small className="text-danger">
+            {errors?.phone && errors.phone.message}
+          </small>
+          {errors?.phone?.type == "validate" && (
+            <small className="text-danger">
+              <FormattedMessage id="Invalid phone" />
+            </small>
+          )}
         </FormGroup>
+
+        <FormGroup>
+          <Label>
+            <FormattedMessage id="Nghành" />{" "}
+            <span className="text-danger">*</span>
+          </Label>
+          <Controller
+            control={control}
+            name="departmentId"
+            render={({ field }) => {
+              return (
+                <Select
+                  id="departmentId"
+                  innerRef={register}
+                  name="departmentId"
+                  className={classnames("react-select")}
+                  options={departments?.map((item, index) => {
+                    return {
+                      value: item?.id,
+                      label: `${item?.code} - ${item?.name}`,
+                      number: index + 1,
+                    };
+                  })}
+                  classNamePrefix="select"
+                  {...field}
+                  onChange={(e) => {
+                    setError("departmentId", "");
+                    setValue("departmentId", e?.value);
+                  }}
+                />
+              );
+            }}
+          ></Controller>
+          <small className="text-danger">
+            {errors?.departmentId && errors.departmentId.message}
+          </small>
+        </FormGroup>
+
+        <FormGroup>
+          <Label for="position">
+            <FormattedMessage id="Chức vụ" />{" "}
+          </Label>
+          <Input
+            name="position"
+            id="position"
+            placeholder=""
+            innerRef={register(StaffOptions.position)}
+            onBlur={() => {
+              let firstNameEl = document.getElementById("position");
+
+              if (firstNameEl && firstNameEl.value) {
+                firstNameEl.value = firstNameEl.value.trim();
+              }
+            }}
+            className={classnames({ "is-invalid": errors["position"] })}
+          />
+        </FormGroup>
+
         <FormGroup>
           <Label for="status">
             <FormattedMessage id="status" />{" "}
@@ -306,8 +412,6 @@ const SidebarAdd = ({
           >
             <option value="1">{intl.formatMessage({ id: "Active" })}</option>
             <option value="0">{intl.formatMessage({ id: "Deactive" })}</option>
-
-            <option value="2">{intl.formatMessage({ id: "Blocked" })}</option>
           </Input>
         </FormGroup>
         <FormGroup>
@@ -317,7 +421,7 @@ const SidebarAdd = ({
           <Select
             isClearable={false}
             theme={selectThemeColors}
-            defaultValue={[roleOptions[0], roleOptions[1]]}
+            defaultValue={[roleOptions[1]]}
             isMulti
             components={{ NoOptionsMessage }}
             name="colors"

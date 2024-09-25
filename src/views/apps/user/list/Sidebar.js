@@ -2,73 +2,131 @@ import Sidebar from "@components/sidebar";
 import { isObjEmpty } from "@utils";
 import classnames from "classnames";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FormattedMessage, injectIntl } from "react-intl";
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+import { Button, Form, FormGroup, Input, Label, Media, Row } from "reactstrap";
 import validateOptions from "../../../../constants/validate";
+import Select from "react-select";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-import { useEffect } from "react";
-import { isValidPhoneNumber } from "react-phone-number-input";
+import { convertFileToBase64, uploadImage } from "../../../../helper/common";
+import { useEffect, useState } from "react";
 import { add } from "../store/action";
+import REGEX from "../../../../constants/regex";
+import { BG_BLANK } from "./../../../../constants/app";
+import { toast } from "react-toastify";
+
 const SidebarAdd = ({
   open,
   toggleSidebar,
-  intl,
+  avatar,
+  setAvatar,
   disable,
   setDisable,
-  phoneNumber,
-  setPhoneNumber,
-  invalidPhone,
-  setInvalidPhone,
 }) => {
   const dispatch = useDispatch();
-  const UserOptions = validateOptions.UserOptions;
   const store = useSelector((state) => state.staffs);
 
-  const { register, errors, handleSubmit } = useForm();
+  const { terms } = useSelector((state) => state.staffs);
   const StaffOptions = validateOptions.StaffOptions;
+
+  const [fileImage, setFileImage] = useState();
+
+  const cate = yup.object({
+    last_name: yup
+      .string()
+      .required(<FormattedMessage id="The last name field is required" />)
+      .max(25, <FormattedMessage id="Last name up to 25 characters" />),
+    first_name: yup
+      .string()
+      .required(<FormattedMessage id="The first name field is required" />)
+      .max(25, <FormattedMessage id="First name up to 25 characters" />),
+    username: yup
+      .string()
+      .required(<FormattedMessage id="The username field is required" />)
+      .min(6, <FormattedMessage id="Username must be at least 6 characters" />)
+      .max(50, <FormattedMessage id="Username must be 50 characters max" />)
+      .matches(REGEX.USERNAME, <FormattedMessage id="Invalid username" />),
+    email: yup
+      .string()
+      .required(<FormattedMessage id="The email field is required" />)
+      .max(125, <FormattedMessage id="Email up to 125 characters" />)
+      .email(<FormattedMessage id="Invalid email" />),
+    password: yup
+      .string()
+      .required(<FormattedMessage id="The password field is required" />)
+      .min(8, <FormattedMessage id="Password minimum 8 characters" />),
+    phone: yup
+      .string()
+      .required(<FormattedMessage id="The phone number field is required" />)
+      // .matches(
+      //   /^(0|84)(2(0[3-9]|1[0-6|8|9]|2[0-2|5-9]|3[2-9]|4[0-9]|5[1|2|4-9]|6[0-3|9]|7[0-7]|8[0-9]|9[0-4|6|7|9])|3[2-9]|5[5|6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])([0-9]{7})$/i,
+      //   <FormattedMessage id="Invalid phone number" />
+      // )
+      .max(25, <FormattedMessage id="Phone number up to 25 characters" />),
+    curriculumSectionId: yup
+      .number()
+      .required(<FormattedMessage id="Vui lòng chọn lớp học" />),
+  });
+
+  const { register, errors, control, setError, setValue, handleSubmit } =
+    useForm({
+      resolver: yupResolver(cate),
+      mode: "all",
+    });
+
+  const onChange = async (e) => {
+    const imageBase64 = await convertFileToBase64(e.target.files[0]);
+    setFileImage(e.target.files[0]);
+    setAvatar(imageBase64);
+  };
 
   useEffect(() => {
     if (store?.err?.statusCode) {
       setDisable(false);
     }
   }, [store?.err]);
-  const onSubmit = (values) => {
-    if (isObjEmpty(errors)) {
-      setDisable(true);
-      dispatch(
-        add({
-          ...values,
-          phone: values?.phone || undefined,
-          role: "MANAGE_USER",
-        })
-      );
-    }
-  };
 
-  const handleOnchangePhone = (e) => {
-    setPhoneNumber(e);
-    try {
-      const check = isValidPhoneNumber(e);
-      if (!check) {
-        setInvalidPhone(true);
+  const onSubmit = async (values) => {
+    setDisable(true);
+
+    var urlImage = " ";
+    if (avatar) {
+      const newData = avatar.replace(/,/gi, "").split("base64");
+      if (newData[1]) {
+        if (newData[1] == BG_BLANK) {
+          toast.error(<FormattedMessage id="Image is required" />);
+          setDisable(false);
+          return;
+        }
+        const data = {
+          imageData: newData[1],
+          imageFormat: fileImage?.type?.split("/")[1] || "png",
+        };
+
+        await uploadImage(data, fileImage).then((res) => {
+          urlImage = res?.data;
+        });
       } else {
-        setInvalidPhone(false);
+        urlImage = avatar;
       }
-    } catch (error) {
-      console.log(error);
-      setInvalidPhone(true);
+
+      if (urlImage) {
+        dispatch(
+          add({
+            ...values,
+            phone: values?.phone || undefined,
+            role: "MANAGE_USER",
+            status: 3,
+            avatar: urlImage,
+            curriculumSectionId: parseInt(values?.curriculumSectionId),
+          })
+        );
+      }
     }
   };
-
-  function hanldeError(params) {
-    if (!isValidPhoneNumber(phoneNumber)) {
-      setInvalidPhone(true);
-    }
-  }
 
   return (
     <Sidebar
@@ -79,7 +137,7 @@ const SidebarAdd = ({
       contentClassName="pt-0"
       toggleSidebar={toggleSidebar}
     >
-      <Form onSubmit={handleSubmit(onSubmit, hanldeError)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
           <Label for="last_name">
             <FormattedMessage id="lastName" />{" "}
@@ -220,36 +278,6 @@ const SidebarAdd = ({
           )}
         </FormGroup>
 
-        {/* <FormGroup>
-          <Label for="phone">
-            <FormattedMessage id="phoneNumber" />{" "}
-            <span className="text-danger">*</span>
-          </Label>
-          <PhoneInput
-            type="text"
-            name="phone"
-            id="phone"
-            placeholder=""
-            innerRef={register(UserOptions.phone)}
-            onBlur={() => {
-              let phone1 = document.getElementById("phone");
-
-              if (phone1 && phone1.value) {
-                phone1.value = phone1.value.trim();
-              }
-            }}
-            className={invalidPhone && "is-invalid form-control"}
-            value={phoneNumber}
-            onChange={(e) => {
-              handleOnchangePhone(e);
-            }}
-          />
-
-          <small className="text-danger">
-            {invalidPhone && <FormattedMessage id="Invalid phone number" />}
-          </small>
-        </FormGroup> */}
-
         <FormGroup>
           <Label for="phone">
             <FormattedMessage id="phoneNumber" />{" "}
@@ -275,12 +303,49 @@ const SidebarAdd = ({
           </small>
           {errors?.phone?.type == "validate" && (
             <small className="text-danger">
-              <FormattedMessage id="Invalid phone" />
+              <FormattedMessage id="Invalid phone number" />
             </small>
           )}
         </FormGroup>
 
         <FormGroup>
+          <Label>
+            <FormattedMessage id="term" />{" "}
+            <span className="text-danger">*</span>
+          </Label>
+          <Controller
+            control={control}
+            name="curriculumSectionId"
+            render={({ field }) => {
+              return (
+                <Select
+                  id="curriculumSectionId"
+                  innerRef={register}
+                  name="curriculumSectionId"
+                  className={classnames("react-select")}
+                  options={terms?.map((item, index) => {
+                    return {
+                      value: item?.id,
+                      label: `${item?.code} - ${item?.title}`,
+                      number: index + 1,
+                    };
+                  })}
+                  classNamePrefix="select"
+                  {...field}
+                  onChange={(e) => {
+                    setError("curriculumSectionId", "");
+                    setValue("curriculumSectionId", e?.value);
+                  }}
+                />
+              );
+            }}
+          ></Controller>
+          <small className="text-danger">
+            {errors?.curriculumSectionId && errors.curriculumSectionId.message}
+          </small>
+        </FormGroup>
+
+        {/* <FormGroup>
           <Label for="status">
             <FormattedMessage id="status" />{" "}
           </Label>
@@ -291,12 +356,42 @@ const SidebarAdd = ({
             id="status"
             innerRef={register({ required: true })}
           >
-            <option value="1">{intl.formatMessage({ id: "Active" })}</option>
-            <option value="0">{intl.formatMessage({ id: "Deactive" })}</option>
-
-            <option value="2">{intl.formatMessage({ id: "Blocked" })}</option>
+            <option value="2">{intl.formatMessage({ id: "Joined" })}</option>
+            <option value="3">
+              {intl.formatMessage({ id: "Not yet joined" })}
+            </option>
           </Input>
+        </FormGroup> */}
+
+        <FormGroup>
+          <Label for="Image">
+            <FormattedMessage id="Image" />
+            <span className="text-danger"> *</span>
+          </Label>
+          <Row className="align-items-end p-1">
+            <Media className="mr-25" left>
+              <Media
+                object
+                className="rounded mr-50"
+                src={avatar}
+                height="100"
+                width="100"
+              />
+            </Media>{" "}
+            <Row className="flex-column px-1">
+              <Button.Ripple tag={Label} className="mt-1" color="primary">
+                <FormattedMessage id="Upload" />
+                <Input
+                  type="file"
+                  onChange={(e) => onChange(e)}
+                  hidden
+                  accept="image/*"
+                />
+              </Button.Ripple>
+            </Row>
+          </Row>
         </FormGroup>
+
         <div style={{ textAlign: "end" }}>
           <Button
             type="submit"

@@ -27,6 +27,9 @@ const SidebarNewCourse = ({
 
   const dispatch = useDispatch();
   const cate = yup.object({
+    code: yup
+      .string()
+      .required(<FormattedMessage id="Mã môn học là bắt buộc" />),
     name: yup
       .string()
       .required(<FormattedMessage id="Tên môn học là bắt buộc" />),
@@ -60,6 +63,7 @@ const SidebarNewCourse = ({
 
     dispatch(
       addCourse({
+        code: values?.code,
         name: values?.name,
         description: desc || "",
         status: parseInt(values.status) || 1,
@@ -78,6 +82,34 @@ const SidebarNewCourse = ({
       toggleSidebar={toggleSidebar}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormGroup>
+          <Label for="code">
+            <FormattedMessage id="Mã môn học" />{" "}
+            <span className="text-danger">*</span>
+          </Label>
+          <Input
+            name="code"
+            id="code"
+            placeholder=""
+            innerRef={register(CourseOptions.code)}
+            onBlur={() => {
+              let code = document.getElementById("code");
+              if (code && code.value) {
+                code.value = code.value.trim();
+              }
+            }}
+            className={classnames({ "is-invalid": errors["code"] })}
+          />
+          <small className="text-danger">
+            {errors?.code && errors.code.message}
+          </small>
+          {errors?.code?.type == "validate" && (
+            <small className="text-danger">
+              <FormattedMessage id="Invalid code" />
+            </small>
+          )}
+        </FormGroup>
+
         <FormGroup>
           <Label for="name">
             <FormattedMessage id="Tên môn học" />{" "}

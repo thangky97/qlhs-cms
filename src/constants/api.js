@@ -432,26 +432,6 @@ const api = {
     path: "/instructors/update",
     method: "POST",
   },
-  LIST_TIMETABLE: {
-    path: "/schedule/get-list",
-    method: "POST",
-  },
-  CREATE_TIMETABLE: {
-    path: "/schedule/insert",
-    method: "POST",
-  },
-  GET_TIMETABLE_DETAIL: {
-    path: "/schedule/get-detail",
-    method: "GET",
-  },
-  DELETE_TIMETABLE: {
-    path: "/schedule/delete",
-    method: "POST",
-  },
-  UPDATE_TIMETABLE: {
-    path: "/schedule/update",
-    method: "POST",
-  },
 
   GET_TRANSACTION_CLOUD_DETAIL: {
     path: "/product/transactionCloud/detail",
@@ -548,7 +528,7 @@ const api = {
     method: "POST",
   },
 
-  //api bộ môn
+  //api nghành
   LIST_DEPARTMENT: {
     path: "/department/get-list",
     method: "POST",
@@ -563,6 +543,60 @@ const api = {
   },
   UPDATE_DEPARTMENT: {
     path: "/department/update",
+    method: "POST",
+  },
+
+  //api chương trình đào tạo
+  LIST_TRAINING_PROGRAM: {
+    path: "/training_program/get-list",
+    method: "POST",
+  },
+  CREATE_TRAINING_PROGRAM: {
+    path: "/training_program/insert",
+    method: "POST",
+  },
+  GET_TRAINING_PROGRAM_DETAIL: {
+    path: "/training_program/get-detail",
+    method: "GET",
+  },
+  UPDATE_TRAINING_PROGRAM: {
+    path: "/training_program/update",
+    method: "POST",
+  },
+
+  //api học kì
+  LIST_SEMESTER: {
+    path: "/semester/get-list",
+    method: "POST",
+  },
+  CREATE_SEMESTER: {
+    path: "/semester/insert",
+    method: "POST",
+  },
+  GET_SEMESTER_DETAIL: {
+    path: "/semester/get-detail",
+    method: "GET",
+  },
+  UPDATE_SEMESTER: {
+    path: "/semester/update",
+    method: "POST",
+  },
+
+  //api lich hoc
+  LIST_TIMETABLE: {
+    path: "/timetable/get-list",
+    method: "POST",
+  },
+  CREATE_TIMETABLE: {
+    path: "/timetable/insert",
+    method: "POST",
+  },
+  GET_TIMETABLE_DETAIL: {
+    path: "/timetable/get-detail",
+    method: "GET",
+  },
+  UPDATE_TIMETABLE: {
+    path: "/timetable/update",
     method: "POST",
   },
 };

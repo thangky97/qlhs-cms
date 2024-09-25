@@ -94,3 +94,40 @@ export const update = (data) => {
       );
   };
 };
+
+//nghành
+export const getDataDepartment = (params) => {
+  return async (dispatch) => {
+    await Service.send({
+      method: api.LIST_DEPARTMENT.method,
+      path: api.LIST_DEPARTMENT.path,
+      data: params,
+    }).then((response) => {
+      dispatch({
+        type: "GET_DATA_DEPARTMENT",
+        data: response?.data?.data,
+        totalPages: response?.data?.total,
+        params,
+      });
+    });
+  };
+};
+
+//lớp học - term
+export const getDataCurriulumSection = (params) => {
+  return async (dispatch) => {
+    await Service.send({
+      method: api.LIST_PRODUCT_TERM.method,
+      path: api.LIST_PRODUCT_TERM.path,
+      data: params,
+      method: "POST",
+    }).then((response) => {
+      dispatch({
+        type: "GET_DATA_TERM_PRODUCT",
+        data: response?.data?.data,
+        totalPages: response?.data?.total,
+        params,
+      });
+    });
+  };
+};

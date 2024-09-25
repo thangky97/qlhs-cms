@@ -65,17 +65,18 @@ export const updateDepartment = (data) => {
   };
 };
 
-export const getDataUser = (params) => {
+//phong ban
+export const getDataTrainingProgram = (params) => {
   return async (dispatch) => {
     await Service.send({
-      method: api.LIST_STAFF.method,
-      path: api.LIST_STAFF.path,
+      method: api.LIST_TRAINING_PROGRAM.method,
+      path: api.LIST_TRAINING_PROGRAM.path,
       data: params,
     }).then((response) => {
       dispatch({
-        type: "GET_DATA_STAFF",
-        data: response?.data,
-        totalPages: response?.total,
+        type: "GET_DATA_TRAINING_PROGRAM",
+        data: response?.data?.data,
+        totalPages: response?.data?.total,
         params,
       });
     });

@@ -3,21 +3,27 @@ import { Link } from "react-router-dom";
 import { Badge } from "reactstrap";
 
 const statusObj = {
-  1: {
-    class: "light-success",
-    text: <FormattedMessage id="Active" />,
-  },
-  0: {
-    class: "light-warning",
-    text: <FormattedMessage id="Deactive" />,
-  },
   2: {
-    class: "light-danger",
-    text: <FormattedMessage id="Blocked" />,
+    class: "light-success",
+    text: <FormattedMessage id="Joined" />,
+  },
+  3: {
+    class: "light-warning",
+    text: <FormattedMessage id="Not yet joined" />,
   },
 };
 
 export const columns = [
+  {
+    name: <FormattedMessage id="Image" />,
+    minWidth: "120px",
+    selector: "avatar",
+    cell: (row) => (
+      <div class="avatar me-1" width="32" height="32">
+        <img src={row?.avatar} alt="" width="32" height="32" />
+      </div>
+    ),
+  },
   {
     name: <FormattedMessage id="lastName" />,
     minWidth: "100px",
@@ -53,6 +59,18 @@ export const columns = [
     cell: (row) => <span className="text-capitalize">{row.phone}</span>,
   },
   {
+    name: <FormattedMessage id="term" />,
+    minWidth: "170px",
+    selector: "curriculumSectionId",
+    cell: (row) => row?.curriculum_section?.title,
+  },
+  {
+    name: <FormattedMessage id="Course" />,
+    minWidth: "170px",
+    selector: "curriculumSectionId",
+    cell: (row) => row?.curriculum_section?.product?.product_names[0]?.name,
+  },
+  {
     name: <FormattedMessage id="status" />,
     minWidth: "120px",
     selector: "status",
@@ -82,7 +100,7 @@ export const columns = [
             >
               <Link
                 className="text-edit hover:text-white"
-                to={`/apps/staff/edit/${row.id}`}
+                to={`/apps/user/edit/${row.id}`}
               >
                 {" "}
                 <FormattedMessage id="edit" />

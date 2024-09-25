@@ -31,10 +31,15 @@ import classrooms from "../../views/apps/classroom/store/reducer";
 
 import department from "../../views/apps/department/store/reducer";
 
+import training_programs from "./../../views/apps/training_program/store/reducer/index";
+
 import auth from "./auth";
 import common from "./common";
 import layout from "./layout";
 import navbar from "./navbar";
+
+import semesters from "../../views/apps/semester/store/reducer";
+import timetable from "../../views/apps/timetable/store/reducer";
 
 const rootReducer = combineReducers({
   auth,
@@ -65,6 +70,9 @@ const rootReducer = combineReducers({
   courses,
   classrooms,
   department,
+  training_programs,
+  semesters,
+  timetable,
 });
 
 export default rootReducer;

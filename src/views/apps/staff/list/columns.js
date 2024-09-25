@@ -11,10 +11,6 @@ const statusObj = {
     class: "light-warning",
     text: <FormattedMessage id="Deactive" />,
   },
-  2: {
-    class: "light-danger",
-    text: <FormattedMessage id="Blocked" />,
-  },
 };
 
 const roleOptions = {
@@ -69,6 +65,13 @@ export const columns = [
       // Sử dụng return để trả về JSX
       return <span>{roleOptions[row?.role]?.text}</span>;
     },
+  },
+  {
+    name: <FormattedMessage id="Ban nghành" />,
+    minWidth: "150px",
+    selector: "departmentId",
+    sortable: false,
+    cell: (row) => row?.department?.name,
   },
   {
     name: <FormattedMessage id="status" />,

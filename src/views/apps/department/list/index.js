@@ -6,7 +6,11 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { columns } from "./columns";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getDataDepartment, getDataUser } from "../store/action";
+import {
+  getDataDepartment,
+  getDataTrainingProgram,
+  getDataUser,
+} from "../store/action";
 
 import DataTable from "react-data-table-component";
 import { ChevronDown } from "react-feather";
@@ -150,17 +154,16 @@ const DepartmentList = ({ intl }) => {
       })
     );
     dispatch(
-      getDataUser({
-        filter: {
-          status: 1,
-          role: STAFF_ROLE.MANAGE_STAFF,
-        },
+      getDataTrainingProgram({
+        filter: {},
         skip: (currentPage - 1) * rowsPerPage,
         limit: 20,
-        order: {
-          key: "createdAt",
-          value: "desc",
-        },
+        order: [
+          {
+            key: "id",
+            value: "desc",
+          },
+        ],
       })
     );
   }, [dispatch]);
@@ -191,7 +194,7 @@ const DepartmentList = ({ intl }) => {
 
   return (
     <div className="app-user-list">
-      <ExtensionsHeader title={<FormattedMessage id="Quản lý bộ môn" />} />
+      <ExtensionsHeader title={<FormattedMessage id="Quản lý nghành" />} />
 
       <Card>
         <CardBody>
@@ -199,14 +202,14 @@ const DepartmentList = ({ intl }) => {
             <Col md="3">
               <Input
                 className=" w-100"
-                placeholder={intl.formatMessage({ id: "Nhập tên bộ môn" })}
+                placeholder={intl.formatMessage({ id: "Nhập tên nghành" })}
                 type="text"
                 value={Name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Col>
 
-            <Col md="3">
+            {/* <Col md="3">
               <Select
                 isClearable={false}
                 className="react-select"
@@ -217,7 +220,7 @@ const DepartmentList = ({ intl }) => {
                   setCurrentStatus(data);
                 }}
               />
-            </Col>
+            </Col> */}
 
             <Col md="3">
               <Button color="primary" className="m-0" onClick={filterData}>

@@ -36,7 +36,7 @@ const StaffEdit = () => {
                 <NavLink active={activeTab === "1"} onClick={() => toggle("1")}>
                   <Users size={14} />
                   <span className="align-middle d-none d-sm-block">
-                    <FormattedMessage id="System staff" />
+                    <FormattedMessage id="customer_student_code" />
                   </span>
                 </NavLink>
               </NavItem>

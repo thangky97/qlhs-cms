@@ -5,6 +5,7 @@ const initialState = {
   total: 1,
   selectedDepartment: null,
   staffs: [],
+  training_programs: [],
 };
 
 const department = (state = initialState, action) => {
@@ -37,11 +38,11 @@ const department = (state = initialState, action) => {
         err: action.err,
       };
 
-    //list staffs
-    case "GET_DATA_STAFF":
+    //list chương trinh dao tao
+    case "GET_DATA_TRAINING_PROGRAM":
       return {
         ...state,
-        staffs: action.data,
+        training_programs: action.data,
         totals: action.totalPages,
         params: action.params,
         status: null,

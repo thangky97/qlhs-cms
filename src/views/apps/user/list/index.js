@@ -3,7 +3,11 @@ import "@styles/react/libs/react-select/_react-select.scss";
 import { useEffect, useState } from "react";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
-import { getData, getDataExport } from "../store/action";
+import {
+  getData,
+  getDataCurriulumSection,
+  getDataExport,
+} from "../store/action";
 
 import Select from "react-select";
 import { columns } from "./columns";
@@ -16,6 +20,7 @@ import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Input, Row } from "reactstrap";
 import XLSX from "xlsx";
 import { STAFF_ROLE } from "./../../../../constants/app";
+import avatarBlank from "./../../../../assets/images/avatars/bg-blank.png";
 
 const CustomHeader = ({ toggleSidebar, exportToExcel }) => {
   return (
@@ -43,6 +48,7 @@ const StaffList = ({ intl }) => {
   const [searchPhone, setSearchPhone] = useState("");
   const [disable, setDisable] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [avatar, setAvatar] = useState(avatarBlank);
 
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -96,6 +102,21 @@ const StaffList = ({ intl }) => {
         },
       })
     );
+    dispatch(
+      getDataCurriulumSection({
+        filter: {
+          status: 1,
+        },
+        skip: (currentPage - 1) * rowsPerPage,
+        limit: 20,
+        order: [
+          {
+            key: "id",
+            value: "desc",
+          },
+        ],
+      })
+    );
   }, [store.status]);
 
   useEffect(() => {
@@ -127,9 +148,8 @@ const StaffList = ({ intl }) => {
 
   const statusOptions = [
     { value: "", label: <FormattedMessage id="Select status" /> },
-    { value: "0", label: <FormattedMessage id="Deactive" /> },
-    { value: "1", label: <FormattedMessage id="Active" /> },
-    { value: "2", label: <FormattedMessage id="Blocked" /> },
+    { value: "2", label: <FormattedMessage id="Joined" /> },
+    { value: "3", label: <FormattedMessage id="Not yet joined" /> },
   ];
 
   const handlePerPage = (e) => {
@@ -327,6 +347,8 @@ const StaffList = ({ intl }) => {
         {...{
           disable,
           setDisable,
+          avatar,
+          setAvatar,
           phoneNumber,
           setPhoneNumber,
           invalidPhone,

@@ -586,11 +586,14 @@ const validateOptions = {
 
   DepartmentOptions: {
     name: {
-      required: <FormattedMessage id="Tên bộ môn là bắt buộc" />,
+      required: <FormattedMessage id="Tên nghành là bắt buộc" />,
     },
-    // area: {
-    //   required: <FormattedMessage id="Tên khu là bắt buộc" />,
-    // },
+  },
+
+  SemesterOptions: {
+    name: {
+      required: <FormattedMessage id="Tên kì học là bắt buộc" />,
+    },
   },
 };
 export default validateOptions;

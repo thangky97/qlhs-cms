@@ -7,10 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Select from "react-select";
 
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
-
-import { isValidPhoneNumber } from "react-phone-number-input";
 import { useHistory } from "react-router-dom";
 import {
   Button,
@@ -23,33 +19,22 @@ import {
   Row,
 } from "reactstrap";
 import validateOptions from "../../../../constants/validate";
-import { update } from "../store/action";
+import { getDataCurriulumSection, update } from "../store/action";
+import avatarBlank from "../../../../assets/images/avatars/bg-blank.png";
+import { convertFileToBase64, uploadImage } from "../../../../helper/common";
+
 const StaffAccountTab = ({ selected, intl }) => {
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
   const [status, setStatus] = useState();
   const EditStaffOptions = validateOptions.EditStaffOptions;
-  const UserOptions = validateOptions.UserOptions;
   const [disable, setDisable] = useState(false);
   const [defaultValueRole, setDefaultValueRole] = useState([]);
-  function hanldeError(params) {
-    if (!isValidPhoneNumber(phoneNumber)) {
-      setInvalidPhone(true);
-    }
-  }
+  const { terms } = useSelector((state) => state.staffs);
+  const [avatar, setAvatar] = useState(avatarBlank);
+  const [fileImage, setFileImage] = useState();
+
   const roleOptions = [
-    {
-      value: "MANAGE_SYSTEM",
-      label: <FormattedMessage id={"Management System"} />,
-      color: "#FFC400",
-      isFixed: false,
-    },
-    {
-      value: "MANAGE_STAFF",
-      label: <FormattedMessage id={"Staff"} />,
-      color: "#FF5630",
-      isFixed: false,
-    },
     {
       value: "MANAGE_USER",
       label: <FormattedMessage id={"User"} />,
@@ -57,40 +42,40 @@ const StaffAccountTab = ({ selected, intl }) => {
       isFixed: false,
     },
   ];
-  const [phoneNumber, setPhoneNumber] = useState();
   const store = useSelector((state) => state.staffs);
 
   const [staffData, setstaffData] = useState(null);
   const dispatch = useDispatch();
 
   const [role, setRole] = useState();
+  const [CurriculumSectionValue, setCurriculumSection] = useState();
+
+  const curriculumSectionOption = {
+    value: staffData?.curriculum_section?.id,
+    label: `${staffData?.curriculum_section?.code} - ${staffData?.curriculum_section?.title}`,
+  };
 
   const onChaneRole = (e) => {
     setRole(e?.map((item) => item.value)?.join(";"));
     setDefaultValueRole(e);
   };
 
-  const [invalidPhone, setInvalidPhone] = useState(false);
   useEffect(() => {
     if (store?.err?.statusCode) {
       setDisable(false);
     }
   }, [store?.err]);
 
-  const handleOnchangePhone = (e) => {
-    setPhoneNumber(e);
-    try {
-      const check = isValidPhoneNumber(e);
-      if (!check) {
-        setInvalidPhone(true);
-      } else {
-        setInvalidPhone(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setInvalidPhone(true);
-    }
+  const onChange = async (e) => {
+    const imageBase64 = await convertFileToBase64(e.target.files[0]);
+    setFileImage(e.target.files[0]);
+    setAvatar(imageBase64);
   };
+  useEffect(() => {
+    if (selected) {
+      setAvatar(selected.avatar);
+    }
+  }, [selected]);
 
   useEffect(() => {
     if (
@@ -100,14 +85,10 @@ const StaffAccountTab = ({ selected, intl }) => {
       setstaffData(selected);
     }
   }, [selected]);
+
   useEffect(() => {
     if (staffData) {
       setStatus(parseInt(staffData.status));
-      if (staffData.phone?.includes("+")) {
-        setPhoneNumber(staffData.phone.trim());
-      } else {
-        setPhoneNumber("+" + staffData.phone.trim());
-      }
       const listDefaulRole = [];
       const arrRole = staffData?.role?.split(";");
       roleOptions.map((item) => {
@@ -117,30 +98,66 @@ const StaffAccountTab = ({ selected, intl }) => {
       });
       setDefaultValueRole(listDefaulRole);
       onChaneRole(listDefaulRole);
+      setCurriculumSection(curriculumSectionOption);
     }
   }, [staffData]);
-  const onSubmit = async (values) => {
-    if (invalidPhone) {
-      setInvalidPhone(true);
-    }
-    if (isObjEmpty(errors) && !invalidPhone) {
-      setDisable(true);
-      dispatch(
-        update({
-          id: parseInt(selected.id),
-          data: {
-            status,
-            ...values,
-            phone: phoneNumber || undefined,
-            role: role || " ",
+
+  useEffect(() => {
+    dispatch(
+      getDataCurriulumSection({
+        filter: {
+          status: 1,
+        },
+        skip: 0,
+        limit: 20,
+        order: [
+          {
+            key: "id",
+            value: "desc",
           },
-        })
-      );
+        ],
+      })
+    );
+  }, [store.status]);
+
+  const onSubmit = async (values) => {
+    if (isObjEmpty(errors)) {
+      setDisable(true);
+      var urlImage = "";
+      if (avatar) {
+        const newData = avatar.replace(/,/gi, "").split("base64");
+        if (newData[1]) {
+          const data = {
+            imageData: newData[1],
+            imageFormat: fileImage.type.split("/")[1],
+          };
+          const res = await uploadImage(data, fileImage).then((res) => {
+            urlImage = res?.data;
+          });
+        } else {
+          urlImage = avatar;
+        }
+        if (urlImage) {
+          dispatch(
+            update({
+              id: parseInt(selected.id),
+              data: {
+                status,
+                ...values,
+                phone: values?.phone || undefined,
+                role: role || " ",
+                curriculumSectionId: parseInt(CurriculumSectionValue?.value),
+                avatar: urlImage,
+              },
+            })
+          );
+        }
+      }
     }
   };
   useEffect(() => {
     if (store.status == 200) {
-      history.push("/apps/staff/list");
+      history.push("/apps/user/list");
     }
   }, [store.status]);
   return (
@@ -153,7 +170,7 @@ const StaffAccountTab = ({ selected, intl }) => {
         </Media>
       </Col>
       <Col sm="12">
-        <Form onSubmit={handleSubmit(onSubmit, hanldeError)}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <Label for="last_name">
               <FormattedMessage id="lastName" />{" "}
@@ -190,7 +207,6 @@ const StaffAccountTab = ({ selected, intl }) => {
             <Input
               name="first_name"
               id="first_name"
-              placeholder="John "
               innerRef={register(EditStaffOptions.first_name)}
               onBlur={() => {
                 let firstNameEl = document.getElementById("first_name");
@@ -244,32 +260,35 @@ const StaffAccountTab = ({ selected, intl }) => {
           <FormGroup>
             <Label for="phone">
               <FormattedMessage id="phoneNumber" />{" "}
-              <span className="text-danger">*</span>
+              <span className="text-danger"> * </span>
             </Label>
-            <PhoneInput
-              type="text"
+            <Input
+              type="phone"
               name="phone"
               id="phone"
-              defaultValue={staffData && staffData.phone}
-              innerRef={register(UserOptions.phone)}
+              placeholder=""
+              innerRef={register(EditStaffOptions.phone)}
               onBlur={() => {
                 let phone1 = document.getElementById("phone");
+
                 if (phone1 && phone1.value) {
                   phone1.value = phone1.value.trim();
                 }
               }}
-              className={invalidPhone && "is-invalid form-control"}
-              value={phoneNumber}
-              onChange={(e) => {
-                handleOnchangePhone(e);
-              }}
+              className={classNames({ "is-invalid": errors["phone"] })}
+              defaultValue={staffData && staffData.phone}
             />
             <small className="text-danger">
-              {invalidPhone && <FormattedMessage id="Invalid phone number" />}
+              {errors?.phone && errors.phone.message}
             </small>
+            {errors?.phone?.type == "validate" && (
+              <small className="text-danger">
+                <FormattedMessage id="Invalid phone" />
+              </small>
+            )}
           </FormGroup>
 
-          <FormGroup>
+          {/* <FormGroup>
             <Label for="status">
               <FormattedMessage id="status" />{" "}
             </Label>
@@ -282,31 +301,70 @@ const StaffAccountTab = ({ selected, intl }) => {
               onChange={(e) => setStatus(e?.target.value)}
               innerRef={register({ required: true })}
             >
-              <option value="1">{intl.formatMessage({ id: "Active" })}</option>
-              <option value="0">
-                {intl.formatMessage({ id: "Deactive" })}
+              <option value="2">{intl.formatMessage({ id: "Joined" })}</option>
+              <option value="3">
+                {intl.formatMessage({ id: "Not yet joined" })}
               </option>
-
-              <option value="2">{intl.formatMessage({ id: "Blocked" })}</option>
             </Input>
-          </FormGroup>
+          </FormGroup> */}
+
           <FormGroup>
             <Label>
-              <FormattedMessage id="role" />
+              <FormattedMessage id="term" />{" "}
+              <span className="text-danger">*</span>
             </Label>
             <Select
               isClearable={false}
-              theme={selectThemeColors}
+              onChange={(e) => setCurriculumSection(e)}
+              innerRef={register({ required: true })}
+              name="curriculumSectionId"
+              value={CurriculumSectionValue}
               placeholder={<FormattedMessage id="Select..." />}
-              isMulti
-              value={defaultValueRole}
-              name="colors"
-              options={roleOptions}
+              options={terms?.map((item, index) => {
+                return {
+                  value: item?.id,
+                  label: `${item?.code} - ${item?.title}`,
+                  number: index + 1,
+                };
+              })}
               className="react-select"
               classNamePrefix="select"
-              onChange={(e) => onChaneRole(e)}
             />
+            <small className="text-danger">
+              {errors?.curriculumSectionId &&
+                errors.curriculumSectionId.message}
+            </small>
           </FormGroup>
+
+          <FormGroup>
+            <Label for="Image">
+              <FormattedMessage id="Image" />
+              <span className="text-danger"> * </span>
+            </Label>
+            <Row className="align-items-end p-1">
+              <Media className="mr-25" left>
+                <Media
+                  object
+                  className="rounded mr-50 objectFit-contain"
+                  src={avatar}
+                  height="100"
+                  width="100"
+                />
+              </Media>{" "}
+              <Row className="flex-column px-1">
+                <Button.Ripple tag={Label} className="mt-1" color="primary">
+                  <FormattedMessage id="Upload" />
+                  <Input
+                    type="file"
+                    onChange={(e) => onChange(e)}
+                    hidden
+                    accept="image/*"
+                  />
+                </Button.Ripple>
+              </Row>
+            </Row>
+          </FormGroup>
+
           <div style={{ textAlign: "end" }}>
             <Button
               type="submit"

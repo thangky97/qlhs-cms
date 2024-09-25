@@ -5,6 +5,7 @@ const initialState = {
   total: 1,
   params: {},
   selected: null,
+  terms: [],
 };
 
 const staffs = (state = initialState, action) => {
@@ -41,6 +42,17 @@ const staffs = (state = initialState, action) => {
       };
     case "DELETE_STAFF":
       return { ...state };
+
+    //lớp học - term
+    case "GET_DATA_TERM_PRODUCT":
+      return {
+        ...state,
+        terms: action.data,
+        totals: action.totalPages,
+        params: action.params,
+        status: null,
+      };
+
     default:
       return { ...state };
   }

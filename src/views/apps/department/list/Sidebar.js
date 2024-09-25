@@ -22,23 +22,19 @@ const SidebarNewDepartment = ({
   setDisable,
 }) => {
   const store = useSelector((state) => state.department);
-  const { staffs } = useSelector((state) => state.department);
-
-  const [changeSelect, setChangeSelect] = useState();
+  const { training_programs } = useSelector((state) => state.department);
 
   const DepartmentOptions = validateOptions.DepartmentOptions;
 
   const dispatch = useDispatch();
   const cate = yup.object({
+    code: yup.string().required(<FormattedMessage id="Mã là bắt buộc" />),
     name: yup
       .string()
-      .required(<FormattedMessage id="Tên bộ môn là bắt buộc" />),
-    // position: yup
-    //   .string()
-    //   .required(<FormattedMessage id="Chức vụ là bắt buộc" />),
-    usersId: yup
+      .required(<FormattedMessage id="Tên nghành là bắt buộc" />),
+    trainingProgramId: yup
       .number()
-      .required(<FormattedMessage id="Vui lòng chọn giảng viên" />),
+      .required(<FormattedMessage id="Vui lòng chọn chương trình đào tạo" />),
   });
   const {
     register,
@@ -72,10 +68,10 @@ const SidebarNewDepartment = ({
 
     dispatch(
       addDepartment({
+        code: values?.code,
         name: values?.name,
-        position: values?.position || "",
         description: desc || "",
-        usersId: parseInt(values?.usersId),
+        trainingProgramId: parseInt(values?.trainingProgramId),
         status: parseInt(values.status) || 1,
       })
     );
@@ -86,87 +82,42 @@ const SidebarNewDepartment = ({
     <Sidebar
       size="lg"
       open={open}
-      title={<FormattedMessage id="Thêm mới bộ môn" />}
+      title={<FormattedMessage id="Thêm mới nghành" />}
       headerClassName="mb-1"
       contentClassName="pt-0"
       toggleSidebar={toggleSidebar}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
-          <Label>
-            <FormattedMessage id="instructors" />{" "}
-            <span className="text-danger">*</span>
-          </Label>
-          <Controller
-            control={control}
-            name="usersId"
-            render={({ field }) => {
-              return (
-                <Select
-                  id="usersId"
-                  innerRef={register}
-                  name="usersId"
-                  className={classnames(
-                    "react-select",
-                    !changeSelect
-                      ? {
-                          "is-invalid": errors["usersId"],
-                        }
-                      : ""
-                  )}
-                  options={staffs?.data?.map((item, index) => {
-                    return {
-                      value: item?.id,
-                      label: `${item?.last_name} ${item?.first_name}`,
-                      number: index + 1,
-                    };
-                  })}
-                  classNamePrefix="select"
-                  {...field}
-                  onChange={(e) => {
-                    setError("usersId", "");
-                    setValue("usersId", e?.value);
-                  }}
-                />
-              );
-            }}
-          ></Controller>
-          <small className="text-danger">
-            {errors?.usersId && errors.usersId.message}
-          </small>
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="position">
-            <FormattedMessage id="Chức vụ" />{" "}
-            {/* <span className="text-danger">*</span> */}
+          <Label for="code">
+            <FormattedMessage id="Mã" /> <span className="text-danger">*</span>
           </Label>
           <Input
-            name="position"
-            id="position"
+            name="code"
+            id="code"
             placeholder=""
-            innerRef={register(DepartmentOptions.position)}
+            innerRef={register(DepartmentOptions.code)}
             onBlur={() => {
-              let position = document.getElementById("position");
-              if (position && position.value) {
-                position.value = position.value.trim();
+              let code = document.getElementById("code");
+              if (code && code.value) {
+                code.value = code.value.trim();
               }
             }}
-            className={classnames({ "is-invalid": errors["position"] })}
+            className={classnames({ "is-invalid": errors["code"] })}
           />
           <small className="text-danger">
-            {errors?.position && errors.position.message}
+            {errors?.code && errors.code.message}
           </small>
-          {errors?.position?.type == "validate" && (
+          {errors?.code?.type == "validate" && (
             <small className="text-danger">
-              <FormattedMessage id="Invalid position" />
+              <FormattedMessage id="Invalid code" />
             </small>
           )}
         </FormGroup>
 
         <FormGroup>
           <Label for="name">
-            <FormattedMessage id="Tên bộ môn" />{" "}
+            <FormattedMessage id="Tên nghành" />{" "}
             <span className="text-danger">*</span>
           </Label>
           <Input
@@ -190,6 +141,43 @@ const SidebarNewDepartment = ({
               <FormattedMessage id="Invalid name" />
             </small>
           )}
+        </FormGroup>
+
+        <FormGroup>
+          <Label>
+            <FormattedMessage id="training_program" />{" "}
+            <span className="text-danger">*</span>
+          </Label>
+          <Controller
+            control={control}
+            name="trainingProgramId"
+            render={({ field }) => {
+              return (
+                <Select
+                  id="trainingProgramId"
+                  innerRef={register}
+                  name="trainingProgramId"
+                  className={classnames("react-select")}
+                  options={training_programs?.map((item, index) => {
+                    return {
+                      value: item?.id,
+                      label: `${item?.code} - ${item?.name}`,
+                      number: index + 1,
+                    };
+                  })}
+                  classNamePrefix="select"
+                  {...field}
+                  onChange={(e) => {
+                    setError("trainingProgramId", "");
+                    setValue("trainingProgramId", e?.value);
+                  }}
+                />
+              );
+            }}
+          ></Controller>
+          <small className="text-danger">
+            {errors?.trainingProgramId && errors.trainingProgramId.message}
+          </small>
         </FormGroup>
 
         <FormGroup>

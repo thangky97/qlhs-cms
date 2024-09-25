@@ -19,7 +19,12 @@ import {
 } from "reactstrap";
 import Swal from "sweetalert2";
 import { formatDateTime } from "../../../../utility/Utils";
-import { getData, getInstractors, remove } from "../store/action";
+import {
+  getData,
+  getDataDepartment,
+  getInstractors,
+  remove,
+} from "../store/action";
 import avatarBlank from "./../../../../assets/images/avatars/bg-blank.png";
 import Sidebar from "./Sidebar";
 
@@ -133,6 +138,19 @@ const ProductList = ({ intl }) => {
           {
             key: "createdAt",
             value: "DESC",
+          },
+        ],
+      })
+    );
+    dispatch(
+      getDataDepartment({
+        filter: {},
+        skip: (currentPage - 1) * rowsPerPage,
+        limit: 20,
+        order: [
+          {
+            key: "id",
+            value: "desc",
           },
         ],
       })
@@ -296,11 +314,12 @@ const ProductList = ({ intl }) => {
                         {typeOptions[item.product_type]?.text}
                       </Badge> */}
                       <span
-                        className="text-ellipse-1"
+                        // className="text-ellipse-1"
                         style={{ fontWeight: "700", color: "#a5a9ab" }}
                       >
-                        Khoá học:{" "}
-                        {item?.product_names && item?.product_names[0]?.name}
+                        Năm học:{" "}
+                        {item?.product_names && item?.product_names[0]?.name} -{" "}
+                        Nghành: {item?.department?.name}
                       </span>
                       <Media body>
                         <small className="text-muted">

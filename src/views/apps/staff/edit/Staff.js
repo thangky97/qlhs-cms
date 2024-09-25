@@ -23,7 +23,7 @@ import {
   Row,
 } from "reactstrap";
 import validateOptions from "../../../../constants/validate";
-import { update } from "../store/action";
+import { getDataDepartment, update } from "../store/action";
 const StaffAccountTab = ({ selected, intl }) => {
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
@@ -37,6 +37,9 @@ const StaffAccountTab = ({ selected, intl }) => {
       setInvalidPhone(true);
     }
   }
+
+  const [departmentValue, setDepartment] = useState();
+
   const roleOptions = [
     {
       value: "MANAGE_SYSTEM",
@@ -59,11 +62,17 @@ const StaffAccountTab = ({ selected, intl }) => {
   ];
   const [phoneNumber, setPhoneNumber] = useState();
   const store = useSelector((state) => state.staffs);
+  const { departments } = useSelector((state) => state.staffs);
 
   const [staffData, setstaffData] = useState(null);
   const dispatch = useDispatch();
 
   const [role, setRole] = useState();
+
+  const departmentOption = {
+    value: store?.departments[0]?.id,
+    label: `${store?.departments[0]?.code} -  ${store?.departments[0]?.name}`,
+  };
 
   const onChaneRole = (e) => {
     setRole(e?.map((item) => item.value)?.join(";"));
@@ -76,6 +85,12 @@ const StaffAccountTab = ({ selected, intl }) => {
       setDisable(false);
     }
   }, [store?.err]);
+
+  useEffect(() => {
+    if (store) {
+      setDepartment(departmentOption);
+    }
+  }, [store]);
 
   const handleOnchangePhone = (e) => {
     setPhoneNumber(e);
@@ -119,11 +134,25 @@ const StaffAccountTab = ({ selected, intl }) => {
       onChaneRole(listDefaulRole);
     }
   }, [staffData]);
+
+  useEffect(() => {
+    dispatch(
+      getDataDepartment({
+        filter: {},
+        skip: 0,
+        limit: 20,
+        order: [
+          {
+            key: "id",
+            value: "desc",
+          },
+        ],
+      })
+    );
+  }, [dispatch]);
+
   const onSubmit = async (values) => {
-    if (invalidPhone) {
-      setInvalidPhone(true);
-    }
-    if (isObjEmpty(errors) && !invalidPhone) {
+    if (isObjEmpty(errors)) {
       setDisable(true);
       dispatch(
         update({
@@ -131,8 +160,10 @@ const StaffAccountTab = ({ selected, intl }) => {
           data: {
             status,
             ...values,
-            phone: phoneNumber || undefined,
+            phone: values?.phone || undefined,
             role: role || " ",
+            position: values?.position || " ",
+            departmentId: parseInt(departmentValue?.value),
           },
         })
       );
@@ -241,7 +272,7 @@ const StaffAccountTab = ({ selected, intl }) => {
             )}
           </FormGroup>
 
-          <FormGroup>
+          {/* <FormGroup>
             <Label for="phone">
               <FormattedMessage id="phoneNumber" />{" "}
               <span className="text-danger">*</span>
@@ -267,6 +298,81 @@ const StaffAccountTab = ({ selected, intl }) => {
             <small className="text-danger">
               {invalidPhone && <FormattedMessage id="Invalid phone number" />}
             </small>
+          </FormGroup> */}
+
+          <FormGroup>
+            <Label for="phone">
+              <FormattedMessage id="phoneNumber" />{" "}
+              <span className="text-danger">*</span>
+            </Label>
+            <Input
+              type="phone"
+              name="phone"
+              id="phone"
+              placeholder=""
+              innerRef={register(EditStaffOptions.phone)}
+              onBlur={() => {
+                let phone1 = document.getElementById("phone");
+
+                if (phone1 && phone1.value) {
+                  phone1.value = phone1.value.trim();
+                }
+              }}
+              className={classNames({ "is-invalid": errors["phone"] })}
+            />
+            <small className="text-danger">
+              {errors?.phone && errors.phone.message}
+            </small>
+            {errors?.phone?.type == "validate" && (
+              <small className="text-danger">
+                <FormattedMessage id="Invalid phone" />
+              </small>
+            )}
+          </FormGroup>
+
+          <FormGroup>
+            <Label>
+              <FormattedMessage id="Nghành" />
+            </Label>
+            <Select
+              isClearable={false}
+              onChange={(e) => setDepartment(e)}
+              innerRef={register({ required: true })}
+              name="departmentId"
+              value={departmentValue}
+              placeholder={<FormattedMessage id="Select..." />}
+              options={departments?.map((item, index) => {
+                return {
+                  value: item?.id,
+                  label: `${item?.last_name} ${item?.first_name}`,
+                };
+              })}
+              className="react-select"
+              classNamePrefix="select"
+            />
+            <small className="text-danger">
+              {errors?.departmentId && errors.departmentId.message}
+            </small>
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="position">
+              <FormattedMessage id="Chức vụ" />{" "}
+            </Label>
+            <Input
+              name="position"
+              id="position"
+              placeholder=""
+              innerRef={register(EditStaffOptions.position)}
+              onBlur={() => {
+                let firstNameEl = document.getElementById("position");
+
+                if (firstNameEl && firstNameEl.value) {
+                  firstNameEl.value = firstNameEl.value.trim();
+                }
+              }}
+              className={classNames({ "is-invalid": errors["position"] })}
+            />
           </FormGroup>
 
           <FormGroup>
@@ -286,8 +392,6 @@ const StaffAccountTab = ({ selected, intl }) => {
               <option value="0">
                 {intl.formatMessage({ id: "Deactive" })}
               </option>
-
-              <option value="2">{intl.formatMessage({ id: "Blocked" })}</option>
             </Input>
           </FormGroup>
           <FormGroup>

@@ -192,7 +192,6 @@ export function convertBase64ToFile(dataurl) {
   });
 }
 export async function uploadImage(data, fileImage) {
-  console.log("data", data);
   if (fileImage?.size > 40485760) {
     toast.error(<FormattedMessage id="Maximum image size is only 40MB" />);
     return null;

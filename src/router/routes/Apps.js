@@ -479,5 +479,61 @@ const AppRoutes = [
       navLink: "/apps/department/edit",
     },
   },
+
+  //chương trình đào tạo
+  {
+    path: "/apps/training_program/list",
+    component: lazy(() =>
+      import("../../views/apps/training_program/list/index")
+    ),
+  },
+  {
+    path: "/apps/training_program/edit/:id",
+    component: lazy(() =>
+      import("../../views/apps/training_program/edit/index")
+    ),
+    meta: {
+      navLink: "/apps/training_program/edit",
+    },
+  },
+
+  //kì học
+  {
+    path: "/apps/semester/list",
+    component: lazy(() => import("../../views/apps/semester/list/index")),
+  },
+  {
+    path: "/apps/semester/edit/:id",
+    component: lazy(() => import("../../views/apps/semester/edit/index")),
+    meta: {
+      navLink: "/apps/semester/edit",
+    },
+  },
+
+  //lịch học
+  {
+    path: "/apps/timetable/list",
+    component: lazy(() => import("../../views/apps/timetable/list/index")),
+  },
+  {
+    path: "/apps/timetable/edit/:id",
+    component: lazy(() => import("../../views/apps/timetable/edit/index")),
+    meta: {
+      navLink: "/apps/timetable/edit",
+    },
+  },
+
+  //điểm danh
+  {
+    path: "/apps/roll_call/list",
+    component: lazy(() => import("../../views/apps/roll_call/list/index")),
+  },
+  {
+    path: "/apps/roll_call/edit/:id",
+    component: lazy(() => import("../../views/apps/roll_call/edit/index")),
+    meta: {
+      navLink: "/apps/roll_call/edit",
+    },
+  },
 ];
 export default AppRoutes;

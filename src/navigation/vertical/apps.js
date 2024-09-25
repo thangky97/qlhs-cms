@@ -7,6 +7,11 @@ import {
   BookOpen,
   Briefcase,
   Table,
+  Grid,
+  Tv,
+  Airplay,
+  Book,
+  Box,
 } from "react-feather";
 import { STAFF_ROLE } from "../../constants/app";
 export default [
@@ -27,10 +32,26 @@ export default [
   //   role: STAFF_ROLE.MANAGE_USER,
   // },
   {
+    id: "training_programs",
+    title: "training_program",
+    icon: <Airplay size={20} />,
+    navLink: "/apps/training_program/list",
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
+  },
+  {
     id: "products",
     title: "Product_Course",
-    icon: <ShoppingCart size={20} />,
+    icon: <Box size={20} />,
     navLink: "/apps/product/list",
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
+  },
+  {
+    id: "semester",
+    title: "Semester",
+    icon: <Book size={20} />,
+    navLink: "/apps/semester/list",
     // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
     role: STAFF_ROLE.MANAGE_STAFF,
   },
@@ -52,7 +73,7 @@ export default [
   },
   {
     id: "department",
-    title: "Bộ môn",
+    title: "Nghành",
     icon: <Briefcase size={20} />,
     navLink: "/apps/department/list",
     // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
@@ -66,6 +87,22 @@ export default [
     // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
     role: STAFF_ROLE.MANAGE_STAFF,
   },
+  {
+    id: "timetable",
+    title: "Timetable",
+    icon: <Table size={20} />,
+    navLink: "/apps/timetable/list",
+    // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+    role: STAFF_ROLE.MANAGE_STAFF,
+  },
+  // {
+  //   id: "rollcall",
+  //   title: "Điểm danh",
+  //   icon: <Tv size={20} />,
+  //   navLink: "/apps/roll_call/list",
+  //   // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+  //   role: STAFF_ROLE.MANAGE_STAFF,
+  // },
   {
     id: "notification",
     title: "Notification",
