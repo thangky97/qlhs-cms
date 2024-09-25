@@ -144,6 +144,7 @@ const StaffAccountTab = ({ selected, intl }) => {
               data: {
                 status,
                 ...values,
+                code: values?.code,
                 phone: values?.phone || undefined,
                 role: role || " ",
                 curriculumSectionId: parseInt(CurriculumSectionValue?.value),
@@ -171,6 +172,34 @@ const StaffAccountTab = ({ selected, intl }) => {
       </Col>
       <Col sm="12">
         <Form onSubmit={handleSubmit(onSubmit)}>
+          <FormGroup>
+            <Label for="code">
+              <FormattedMessage id="student_code" />{" "}
+              <span className="text-danger">*</span>
+            </Label>
+            <Input
+              name="code"
+              id="code"
+              innerRef={register(EditStaffOptions.code)}
+              onBlur={() => {
+                let lastNameEl = document.getElementById("code");
+                if (lastNameEl && lastNameEl.value) {
+                  lastNameEl.value = lastNameEl.value.trim();
+                }
+              }}
+              className={classNames({ "is-invalid": errors["code"] })}
+              defaultValue={staffData && staffData.code}
+            />
+            <small className="text-danger">
+              {errors?.code && errors.code.message}
+            </small>
+            {errors?.code?.type == "validate" && (
+              <small className="text-danger">
+                <FormattedMessage id="Invalid last name" />
+              </small>
+            )}
+          </FormGroup>
+
           <FormGroup>
             <Label for="last_name">
               <FormattedMessage id="lastName" />{" "}

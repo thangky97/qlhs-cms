@@ -202,7 +202,7 @@ const StaffList = ({ intl }) => {
 
   return (
     <div className="app-user-list">
-      <ExtensionsHeader title={<FormattedMessage id="Học sinh" />} />
+      <ExtensionsHeader title={<FormattedMessage id="Student" />} />
       <Card>
         <CardBody>
           <Row>

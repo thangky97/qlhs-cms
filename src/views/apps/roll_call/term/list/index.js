@@ -106,7 +106,7 @@ const TermList = ({ intl }) => {
       cell: (row) => row?.title,
     },
     // {
-    //   name: <FormattedMessage id="Số học sinh" />,
+    //   name: <FormattedMessage id="Số sinh viên" />,
     //   minWidth: "7%",
     //   selector: "number_students",
     //   sortable: false,

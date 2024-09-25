@@ -61,7 +61,7 @@ const VerticalMenuHeader = (props) => {
             </span>
 
             <div className="brand-text mb-0" style={{ fontSize: "1rem" }}>
-              Cms Quản lý học sinh
+              Hệ thống điểm danh SV
             </div>
           </NavLink>
         </li>

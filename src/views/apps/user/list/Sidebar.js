@@ -35,24 +35,24 @@ const SidebarAdd = ({
   const [fileImage, setFileImage] = useState();
 
   const cate = yup.object({
+    code: yup.string().required(<FormattedMessage id="Mã là bắt buộc" />),
     last_name: yup
       .string()
-      .required(<FormattedMessage id="The last name field is required" />)
-      .max(25, <FormattedMessage id="Last name up to 25 characters" />),
+      .required(<FormattedMessage id="The last name field is required" />),
+    last_name: yup
+      .string()
+      .required(<FormattedMessage id="The last name field is required" />),
     first_name: yup
       .string()
-      .required(<FormattedMessage id="The first name field is required" />)
-      .max(25, <FormattedMessage id="First name up to 25 characters" />),
+      .required(<FormattedMessage id="The first name field is required" />),
     username: yup
       .string()
       .required(<FormattedMessage id="The username field is required" />)
       .min(6, <FormattedMessage id="Username must be at least 6 characters" />)
-      .max(50, <FormattedMessage id="Username must be 50 characters max" />)
       .matches(REGEX.USERNAME, <FormattedMessage id="Invalid username" />),
     email: yup
       .string()
       .required(<FormattedMessage id="The email field is required" />)
-      .max(125, <FormattedMessage id="Email up to 125 characters" />)
       .email(<FormattedMessage id="Invalid email" />),
     password: yup
       .string()
@@ -61,11 +61,7 @@ const SidebarAdd = ({
     phone: yup
       .string()
       .required(<FormattedMessage id="The phone number field is required" />)
-      // .matches(
-      //   /^(0|84)(2(0[3-9]|1[0-6|8|9]|2[0-2|5-9]|3[2-9]|4[0-9]|5[1|2|4-9]|6[0-3|9]|7[0-7]|8[0-9]|9[0-4|6|7|9])|3[2-9]|5[5|6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])([0-9]{7})$/i,
-      //   <FormattedMessage id="Invalid phone number" />
-      // )
-      .max(25, <FormattedMessage id="Phone number up to 25 characters" />),
+      .min(10, <FormattedMessage id="Số điện thoại tối thiểu 10 ký tự" />),
     curriculumSectionId: yup
       .number()
       .required(<FormattedMessage id="Vui lòng chọn lớp học" />),
@@ -117,6 +113,7 @@ const SidebarAdd = ({
         dispatch(
           add({
             ...values,
+            code: values?.code,
             phone: values?.phone || undefined,
             role: "MANAGE_USER",
             status: 3,
@@ -138,6 +135,35 @@ const SidebarAdd = ({
       toggleSidebar={toggleSidebar}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormGroup>
+          <Label for="code">
+            <FormattedMessage id="student_code" />{" "}
+            <span className="text-danger">*</span>
+          </Label>
+          <Input
+            name="code"
+            id="code"
+            placeholder=""
+            innerRef={register(StaffOptions.code)}
+            onBlur={() => {
+              let lastNameEl = document.getElementById("code");
+
+              if (lastNameEl && lastNameEl.value) {
+                lastNameEl.value = lastNameEl.value.trim();
+              }
+            }}
+            className={classnames({ "is-invalid": errors["code"] })}
+          />
+          <small className="text-danger">
+            {errors?.code && errors.code.message}
+          </small>
+          {errors?.code?.type == "validate" && (
+            <small className="text-danger">
+              <FormattedMessage id="Invalid last name" />
+            </small>
+          )}
+        </FormGroup>
+
         <FormGroup>
           <Label for="last_name">
             <FormattedMessage id="lastName" />{" "}

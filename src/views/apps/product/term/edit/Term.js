@@ -60,7 +60,7 @@ const TermTab = ({ selected, intl }) => {
       .required(<FormattedMessage id="Tên lớp học là bắt buộc" />),
     // number_students: yup
     //   .string()
-    //   .required(<FormattedMessage id="Số học sinh là bắt buộc" />),
+    //   .required(<FormattedMessage id="Số sinh viên là bắt buộc" />),
     // time: yup
     //   .string()
     //   .required(<FormattedMessage id="The time study field is required" />),
@@ -238,7 +238,7 @@ const TermTab = ({ selected, intl }) => {
 
       {/* <FormGroup>
         <Label for="number_students">
-          <FormattedMessage id="Số học sinh" />{" "}
+          <FormattedMessage id="Số sinh viên" />{" "}
           <span className="text-danger">*</span>
         </Label>
         <Input

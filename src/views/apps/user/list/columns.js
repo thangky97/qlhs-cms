@@ -25,6 +25,13 @@ export const columns = [
     ),
   },
   {
+    name: <FormattedMessage id="student_code" />,
+    minWidth: "100px",
+    selector: "code",
+    sortable: false,
+    cell: (row) => row.code,
+  },
+  {
     name: <FormattedMessage id="lastName" />,
     minWidth: "100px",
     selector: "last_name",

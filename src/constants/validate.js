@@ -292,6 +292,10 @@ const validateOptions = {
     },
   },
   EditStaffOptions: {
+    code: {
+      required: <FormattedMessage id="Mã là bắt buộc" />,
+      validate: (value) => !REGEX.NAME.test(value),
+    },
     last_name: {
       required: <FormattedMessage id="The last name field is required" />,
       validate: (value) => !REGEX.NAME.test(value),

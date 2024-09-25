@@ -315,7 +315,7 @@ const ProductList = ({ intl }) => {
                       </Badge> */}
                       <span
                         // className="text-ellipse-1"
-                        style={{ fontWeight: "700", color: "#a5a9ab" }}
+                        style={{ fontWeight: "700", color: "#fff" }}
                       >
                         Năm học:{" "}
                         {item?.product_names && item?.product_names[0]?.name} -{" "}
@@ -323,8 +323,8 @@ const ProductList = ({ intl }) => {
                       </span>
                       <Media body>
                         <small className="text-muted">
-                          <FormattedMessage id="createdAt" />:{" "}
-                          {formatDateTime(item?.createdAt)}
+                          {/* <FormattedMessage id="createdAt" />:{" "}
+                          {formatDateTime(item?.createdAt)} */}
                         </small>
                       </Media>
                     </CardText>
@@ -336,14 +336,18 @@ const ProductList = ({ intl }) => {
                   >
                     {statusObj[item.status]?.text}
                   </Badge> */}
-                  <Badge
+                  {/* <Badge
                     className="text-capitalize"
                     color={statusOpen[item.open]?.class}
                     pill
                   >
                     {statusOpen[item.open]?.text}
-                  </Badge>
+                  </Badge> */}
                 </div>
+                <h5 className="apply-job-title mb-2">
+                  Chương trình đào tạo:{" "}
+                  {item?.department?.training_program?.name}
+                </h5>
                 <h5 className="apply-job-title">
                   <FormattedMessage id="Description" /> :{" "}
                 </h5>
