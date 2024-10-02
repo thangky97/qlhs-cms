@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import validateOptions from "../../../../constants/validate";
 import { convertFileToBase64, uploadImage } from "../../../../helper/common";
-import { add } from "../store/action";
+// import { add } from "../store/action";
 import Select from "react-select";
 import * as yup from "yup";
 import classNames from "classnames";
@@ -68,56 +68,57 @@ const SidebarAdd = ({
     EditorState.createEmpty()
   );
 
-  const onSubmit = async (values) => {
-    const product_description =
-      (valueDescription &&
-        draftToHtml(convertToRaw(valueDescription?.getCurrentContent()))) ||
-      null;
+  // const onSubmit = async (values) => {
+  //   const product_description =
+  //     (valueDescription &&
+  //       draftToHtml(convertToRaw(valueDescription?.getCurrentContent()))) ||
+  //     null;
 
-    setDisable(true);
-    var urlImage = " ";
+  //   setDisable(true);
+  //   var urlImage = " ";
 
-    if (avatar) {
-      const newData = avatar.replace(/,/gi, "").split("base64");
-      if (newData[1]) {
-        const data = {
-          imageData: newData[1],
-          imageFormat: fileImage?.type?.split("/")[1] || "png",
-        };
+  //   if (avatar) {
+  //     const newData = avatar.replace(/,/gi, "").split("base64");
+  //     if (newData[1]) {
+  //       const data = {
+  //         imageData: newData[1],
+  //         imageFormat: fileImage?.type?.split("/")[1] || "png",
+  //       };
 
-        await uploadImage(data, fileImage).then((res) => {
-          urlImage = res?.data;
-        });
-      } else {
-        urlImage = avatar;
-      }
-      if (urlImage) {
-        dispatch(
-          add({
-            product_name: values?.product_name || "",
-            sort_product_description: "",
-            product_description: product_description || "",
-            status: parseInt(values.status) || 1,
-            allow_display: parseInt(values.allow_display),
-            product_type: parseInt(values.product_type) || 0,
-            departmentId: parseInt(values?.departmentId),
-            url_ytb: "",
-            url_demo: "",
-            url_tutorial: "",
-            instructorId: null,
-            lang,
-            image: urlImage || Image,
-            number_trial: 0,
-            link_trial: "",
-            link_download: "", //cancel
-            open: 1,
-            is_monitor: 0,
-            vat: 0,
-          })
-        );
-      }
-    }
-  };
+  //       await uploadImage(data, fileImage).then((res) => {
+  //         urlImage = res?.data;
+  //       });
+  //     } else {
+  //       urlImage = avatar;
+  //     }
+  //     if (urlImage) {
+  //       dispatch(
+  //         add({
+  //           product_name: values?.product_name || "",
+  //           sort_product_description: "",
+  //           product_description: product_description || "",
+  //           status: parseInt(values.status) || 1,
+  //           allow_display: parseInt(values.allow_display),
+  //           product_type: parseInt(values.product_type) || 0,
+  //           departmentId: parseInt(values?.departmentId),
+  //           url_ytb: "",
+  //           url_demo: "",
+  //           url_tutorial: "",
+  //           instructorId: null,
+  //           lang,
+  //           image: urlImage || Image,
+  //           number_trial: 0,
+  //           link_trial: "",
+  //           link_download: "", //cancel
+  //           open: 1,
+  //           is_monitor: 0,
+  //           vat: 0,
+  //         })
+  //       );
+  //     }
+  //   }
+  // };
+
   const uploadCallback = async (file) => {
     var linkImg = avatarBlank;
     const imageBase64 = await convertFileToBase64(file);
@@ -147,7 +148,8 @@ const SidebarAdd = ({
       contentClassName="pt-0"
       toggleSidebar={toggleSidebar}
     >
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      {/* <Form onSubmit={handleSubmit(onSubmit)}> */}
+      <Form>
         <FormGroup>
           <Label for="product_name">
             <FormattedMessage id="product name" />{" "}

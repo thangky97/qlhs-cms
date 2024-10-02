@@ -49,6 +49,7 @@ const TrainingProgramList = ({ intl }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [Name, setName] = useState();
+  const [Code, setCode] = useState();
   const [currentStatus, setCurrentStatus] = useState({
     value: "",
     label: <FormattedMessage id={"Select status"} />,
@@ -118,6 +119,7 @@ const TrainingProgramList = ({ intl }) => {
       getDataTrainingProgram({
         filter: {
           name: Name || undefined,
+          code: Code || undefined,
           status: currentStatus?.value || undefined,
         },
         skip: 0,
@@ -163,6 +165,16 @@ const TrainingProgramList = ({ intl }) => {
       <Card>
         <CardBody>
           <Row>
+            <Col md="3">
+              <Input
+                className=" w-100"
+                placeholder={intl.formatMessage({ id: "Mã chương trình học" })}
+                type="text"
+                value={Code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </Col>
+
             <Col md="3">
               <Input
                 className=" w-100"

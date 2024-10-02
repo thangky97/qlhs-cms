@@ -529,11 +529,31 @@ const AppRoutes = [
     component: lazy(() => import("../../views/apps/roll_call/list/index")),
   },
   {
-    path: "/apps/roll_call/edit/:id",
+    path: "/apps/roll_call/edit",
     component: lazy(() => import("../../views/apps/roll_call/edit/index")),
     meta: {
       navLink: "/apps/roll_call/edit",
     },
   },
+
+  // {
+  //   path: "/apps/product/term/list/:id",
+  //   component: lazy(() => import("../../views/apps/product/term/list")),
+  //   meta: {
+  //     navLink: "/apps/product/term/list",
+  //   },
+  // },
+  // {
+  //   path: "/apps/product/term/edit",
+  //   exact: true,
+  //   component: () => <Redirect to="/apps/product/term/edit/1" />,
+  // },
+  // {
+  //   path: "/apps/product/term/edit/:id",
+  //   component: lazy(() => import("../../views/apps/product/term/edit")),
+  //   meta: {
+  //     navLink: "/apps/product/term/edit",
+  //   },
+  // },
 ];
 export default AppRoutes;

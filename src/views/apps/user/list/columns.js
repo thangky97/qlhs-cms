@@ -65,33 +65,33 @@ export const columns = [
     selector: "phone",
     cell: (row) => <span className="text-capitalize">{row.phone}</span>,
   },
-  {
-    name: <FormattedMessage id="term" />,
-    minWidth: "170px",
-    selector: "curriculumSectionId",
-    cell: (row) => row?.curriculum_section?.title,
-  },
-  {
-    name: <FormattedMessage id="Course" />,
-    minWidth: "170px",
-    selector: "curriculumSectionId",
-    cell: (row) => row?.curriculum_section?.product?.product_names[0]?.name,
-  },
-  {
-    name: <FormattedMessage id="status" />,
-    minWidth: "120px",
-    selector: "status",
-    sortable: false,
-    cell: (row) => (
-      <Badge
-        className="text-capitalize"
-        color={statusObj[row.status]?.class}
-        pill
-      >
-        {statusObj[row.status]?.text}
-      </Badge>
-    ),
-  },
+  // {
+  //   name: <FormattedMessage id="term" />,
+  //   minWidth: "170px",
+  //   selector: "curriculumSectionId",
+  //   cell: (row) => row?.curriculum_section?.title,
+  // },
+  // {
+  //   name: <FormattedMessage id="Course" />,
+  //   minWidth: "170px",
+  //   selector: "curriculumSectionId",
+  //   cell: (row) => row?.curriculum_section?.product?.product_names[0]?.name,
+  // },
+  // {
+  //   name: <FormattedMessage id="status" />,
+  //   minWidth: "120px",
+  //   selector: "status",
+  //   sortable: false,
+  //   cell: (row) => (
+  //     <Badge
+  //       className="text-capitalize"
+  //       color={statusObj[row.status]?.class}
+  //       pill
+  //     >
+  //       {statusObj[row.status]?.text}
+  //     </Badge>
+  //   ),
+  // },
   {
     name: <FormattedMessage id="actions" />,
     minWidth: "130px",

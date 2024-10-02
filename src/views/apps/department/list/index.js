@@ -45,6 +45,7 @@ const DepartmentList = ({ intl }) => {
   const dispatch = useDispatch();
   const common = useSelector((state) => state.common);
   const department = useSelector((state) => state.department);
+  const { training_programs } = useSelector((state) => state.department);
 
   const [disable, setDisable] = useState(false);
 
@@ -54,11 +55,18 @@ const DepartmentList = ({ intl }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [Name, setName] = useState();
+  const [Code, setCode] = useState();
   const [currentStatus, setCurrentStatus] = useState({
     value: "",
     label: <FormattedMessage id={"Select status"} />,
     number: 0,
   });
+
+  const optionTrainning = {
+    value: "",
+    label: "Chương trình đào tạo",
+  };
+  const [filterTrainning, setFilterTrainning] = useState(optionTrainning);
 
   const [loadData, setLoadData] = useState(false);
 
@@ -122,7 +130,9 @@ const DepartmentList = ({ intl }) => {
     dispatch(
       getDataDepartment({
         filter: {
+          code: Code || undefined,
           name: Name || undefined,
+          trainingProgramId: filterTrainning?.value || undefined,
           status: currentStatus?.value || undefined,
         },
         skip: 0,
@@ -202,10 +212,41 @@ const DepartmentList = ({ intl }) => {
             <Col md="3">
               <Input
                 className=" w-100"
-                placeholder={intl.formatMessage({ id: "Nhập tên nghành" })}
+                placeholder={intl.formatMessage({ id: "Mã" })}
+                type="text"
+                value={Code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </Col>
+
+            <Col md="3">
+              <Input
+                className=" w-100"
+                placeholder={intl.formatMessage({ id: "Tên nghành" })}
                 type="text"
                 value={Name}
                 onChange={(e) => setName(e.target.value)}
+              />
+            </Col>
+
+            <Col md="3">
+              <Select
+                isClearable={false}
+                className="react-select"
+                classNamePrefix="select"
+                options={[
+                  { value: null, label: "Chọn chương trình đào tạo" },
+                  ...(Array.isArray(training_programs)
+                    ? training_programs.map((item) => ({
+                        value: item?.id,
+                        label: `${item?.code} - ${item?.name}`,
+                      }))
+                    : []),
+                ]}
+                value={filterTrainning}
+                onChange={(data) => {
+                  setFilterTrainning(data);
+                }}
               />
             </Col>
 

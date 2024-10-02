@@ -48,12 +48,12 @@ const StaffAccountTab = ({ selected, intl }) => {
   const dispatch = useDispatch();
 
   const [role, setRole] = useState();
-  const [CurriculumSectionValue, setCurriculumSection] = useState();
+  // const [CurriculumSectionValue, setCurriculumSection] = useState();
 
-  const curriculumSectionOption = {
-    value: staffData?.curriculum_section?.id,
-    label: `${staffData?.curriculum_section?.code} - ${staffData?.curriculum_section?.title}`,
-  };
+  // const curriculumSectionOption = {
+  //   value: staffData?.curriculum_section?.id,
+  //   label: `${staffData?.curriculum_section?.code} - ${staffData?.curriculum_section?.title}`,
+  // };
 
   const onChaneRole = (e) => {
     setRole(e?.map((item) => item.value)?.join(";"));
@@ -98,7 +98,7 @@ const StaffAccountTab = ({ selected, intl }) => {
       });
       setDefaultValueRole(listDefaulRole);
       onChaneRole(listDefaulRole);
-      setCurriculumSection(curriculumSectionOption);
+      // setCurriculumSection(curriculumSectionOption);
     }
   }, [staffData]);
 
@@ -147,7 +147,7 @@ const StaffAccountTab = ({ selected, intl }) => {
                 code: values?.code,
                 phone: values?.phone || undefined,
                 role: role || " ",
-                curriculumSectionId: parseInt(CurriculumSectionValue?.value),
+                // curriculumSectionId: parseInt(CurriculumSectionValue?.value),
                 avatar: urlImage,
               },
             })
@@ -337,7 +337,7 @@ const StaffAccountTab = ({ selected, intl }) => {
             </Input>
           </FormGroup> */}
 
-          <FormGroup>
+          {/* <FormGroup>
             <Label>
               <FormattedMessage id="term" />{" "}
               <span className="text-danger">*</span>
@@ -363,7 +363,7 @@ const StaffAccountTab = ({ selected, intl }) => {
               {errors?.curriculumSectionId &&
                 errors.curriculumSectionId.message}
             </small>
-          </FormGroup>
+          </FormGroup> */}
 
           <FormGroup>
             <Label for="Image">

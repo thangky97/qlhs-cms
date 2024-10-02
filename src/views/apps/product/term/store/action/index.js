@@ -167,3 +167,21 @@ export const getDetailCourse = (courseId) => {
       .catch((err) => console.log(err));
   };
 };
+
+//học sinh
+export const getUser = (params) => {
+  return async (dispatch) => {
+    await Service.send({
+      method: api.LIST_STAFF.method,
+      path: api.LIST_STAFF.path,
+      data: params,
+    }).then((response) => {
+      dispatch({
+        type: "GET_DATA_STAFF",
+        data: response?.data?.data,
+        totalPages: response?.data?.total,
+        params,
+      });
+    });
+  };
+};

@@ -54,6 +54,7 @@ const CustomHeader = ({ toggleSidebar }) => {
 const ProductList = ({ intl }) => {
   const dispatch = useDispatch();
   const store = useSelector((state) => state.products);
+  const { departments } = useSelector((state) => state.products);
   const lang = useSelector((state) => state.common.language);
   const history = useHistory();
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,32 +64,14 @@ const ProductList = ({ intl }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [disable, setDisable] = useState(false);
 
-  const [filterStatus, setFilterStatus] = useState({
-    value: null,
-    label: <FormattedMessage id="status" />,
-  });
-  const [filterOpen, setFilterOpen] = useState({
-    value: null,
-    label: <FormattedMessage id="open" />,
-  });
   const [valueDescription, setValueDescription] = useState(
     EditorState.createEmpty()
   );
 
-  //TODO TUDN add type option
-  const typeOptions = [
-    { value: null, label: <FormattedMessage id="product_type" /> },
-    { value: "0", label: <FormattedMessage id="Course" /> },
-    { value: "1", label: <FormattedMessage id="Book" /> },
-    { value: "2", label: <FormattedMessage id="Product" /> },
-    { value: "3", label: <FormattedMessage id="service" /> },
-  ];
-
-  const statusOptions = [
-    { value: null, label: <FormattedMessage id="Select status" /> },
-    { value: "1", label: <FormattedMessage id="Active" /> },
-    { value: "2", label: <FormattedMessage id="OutOfStock" /> },
-  ];
+  const [filterDepartment, setFilterDepartment] = useState({
+    value: null,
+    label: "Chọn nghành",
+  });
 
   const [loadData, setLoadData] = useState(false);
   const toggleSidebar = () => {
@@ -123,9 +106,7 @@ const ProductList = ({ intl }) => {
     dispatch(
       getData({
         filter: {
-          product_type: 0,
-          status: filterStatus?.value || undefined,
-          open: filterOpen?.value || undefined,
+          departmentId: filterDepartment.value || undefined,
           lang,
         },
         skip: (currentPage - 1) * rowsPerPage,
@@ -198,17 +179,6 @@ const ProductList = ({ intl }) => {
     }
   }, [store.status]);
 
-  const statusObj = {
-    1: {
-      class: "light-success",
-      text: <FormattedMessage id="Active" />,
-    },
-    2: {
-      class: "light-danger",
-      text: <FormattedMessage id="OutOfStock" />,
-    },
-  };
-
   const handlePerPage = (e) => {
     const value = parseInt(e.currentTarget.value);
 
@@ -226,47 +196,31 @@ const ProductList = ({ intl }) => {
     );
   };
   const count = Math.ceil(store.total / rowsPerPage);
-  const statusOpen = {
-    1: {
-      class: "light-success",
-      text: <FormattedMessage id="Opened" />,
-    },
-    0: {
-      class: "light-warning",
-      text: <FormattedMessage id="Not opened" />,
-    },
-    3: {},
-  };
+
   return (
     <div className="app-user-list">
       <ExtensionsHeader title={<FormattedMessage id="Product_Course" />} />
       <Card>
         <CardBody>
           <Row>
-            {/* <Col md="4">
-              <Select
-                isClearable={false}
-                className="react-select"
-                classNamePrefix="select"
-                options={typeOptions}
-                value={filterType}
-                onChange={(data) => {
-                  setCurrentPage(1);
-                  setFilterType(data);
-                  setLoadData(!loadData);
-                }}
-              />
-            </Col> */}
             <Col md="4">
               <Select
                 isClearable={false}
                 className="react-select"
                 classNamePrefix="select"
-                options={statusOptions}
-                value={filterStatus}
+                options={[
+                  { value: null, label: "Chọn nghành" },
+                  ...(Array.isArray(departments)
+                    ? departments.map((item) => ({
+                        value: item?.id,
+                        label: `${item?.code} - ${item?.name}`,
+                      }))
+                    : []),
+                ]}
+                value={filterDepartment}
                 onChange={(data) => {
                   setCurrentPage(1);
-                  setFilterStatus(data);
+                  setFilterDepartment(data);
                   setLoadData(!loadData);
                 }}
               />

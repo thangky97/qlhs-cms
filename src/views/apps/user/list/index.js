@@ -64,6 +64,7 @@ const StaffList = ({ intl }) => {
     setPhoneNumber(" ");
     setInvalidPhone(false);
   };
+  const [searchCode, setSearchCode] = useState(null);
   const [searchLastName, setSearchLastName] = useState(null);
   const [searchFirstName, setSearchFirstName] = useState(null);
   const [invalidPhone, setInvalidPhone] = useState(false);
@@ -76,6 +77,7 @@ const StaffList = ({ intl }) => {
         filter: {
           phone: searchPhone || undefined,
           status: filterStatus?.value || undefined,
+          code: searchCode || undefined,
           last_name: searchLastName || undefined,
           first_name: searchFirstName || undefined,
           roleId: filterRole?.value || undefined,
@@ -95,7 +97,9 @@ const StaffList = ({ intl }) => {
   useEffect(() => {
     dispatch(
       getDataExport({
-        filter: {},
+        filter: {
+          role: STAFF_ROLE.MANAGE_USER,
+        },
         order: {
           key: "createdAt",
           value: "desc",
@@ -174,6 +178,7 @@ const StaffList = ({ intl }) => {
       const data = store?.dataExport;
       const cols = [
         { header: "ID", key: "id" },
+        { header: "Mã sinh viên", key: "code" },
         { header: "Tài khoản", key: "username" },
         { header: "Email", key: "email" },
         { header: "Họ", key: "first_name" },
@@ -181,7 +186,6 @@ const StaffList = ({ intl }) => {
         { header: "Số điện thoại", key: "phone" },
         { header: "Vai trò", key: "role" },
         { header: "Trạng thái", key: "status" },
-        { header: "Ngày tạo", key: "createdAt" },
       ];
       const mappedData = data.map((item) =>
         Object.fromEntries(
@@ -195,8 +199,8 @@ const StaffList = ({ intl }) => {
         header: cols.map((col) => col.header),
       });
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Nhân viên");
-      XLSX.writeFile(workbook, "staff.xlsx");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sinh viên");
+      XLSX.writeFile(workbook, "student.xlsx");
     }
   };
 
@@ -206,7 +210,7 @@ const StaffList = ({ intl }) => {
       <Card>
         <CardBody>
           <Row>
-            <Col md="4">
+            {/* <Col md="4">
               <Select
                 isClearable={false}
                 className="react-select"
@@ -215,6 +219,18 @@ const StaffList = ({ intl }) => {
                 value={filterStatus}
                 onChange={(data) => {
                   setFilterStatus(data);
+                }}
+              />
+            </Col> */}
+            <Col md="4">
+              <Input
+                id="search-invoice"
+                className=" w-100"
+                placeholder={intl.formatMessage({ id: "Mã sinh viên" })}
+                type="text"
+                value={searchCode}
+                onChange={(data) => {
+                  setSearchCode(data.target.value);
                 }}
               />
             </Col>

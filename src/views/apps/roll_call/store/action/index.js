@@ -1,15 +1,15 @@
 import api from "../../../../../constants/api";
 import Service from "../../../../../services/request";
 
-export const getData = (params) => {
+export const getDataRollCall = (params) => {
   return async (dispatch) => {
     await Service.send({
-      method: api.LIST_PRODUCT.method,
-      path: api.LIST_PRODUCT.path,
+      method: api.LIST_ROLL_CALL.method,
+      path: api.LIST_ROLL_CALL.path,
       data: params,
     }).then((response) => {
       dispatch({
-        type: "GET_DATA_PRODUCT",
+        type: "GET_DATA_ROLL_CALL",
         data: response?.data?.data,
         totalPages: response?.data?.total,
         params,
@@ -18,16 +18,16 @@ export const getData = (params) => {
   };
 };
 
-export const getById = (data) => {
+export const getByIdRollCall = (data) => {
   return async (dispatch) => {
     await Service.send({
-      method: api.GET_PRODUCT.method,
-      path: api.GET_PRODUCT.path,
+      method: api.GET_ROLL_CALL.method,
+      path: api.GET_ROLL_CALL.path,
       query: data,
     })
       .then((response) => {
         dispatch({
-          type: "GET_PRODUCT",
+          type: "GET_ROLL_CALL",
           selected: response?.data,
         });
       })
@@ -37,127 +37,60 @@ export const getById = (data) => {
   };
 };
 
-export const add = (staff) => {
+export const updateRollCall = (staff) => {
   return async (dispatch, getState) => {
     await Service.send({
-      method: api.CREATE_PRODUCT.method,
-      path: api.CREATE_PRODUCT.path,
+      method: api.UPDATE_ROLL_CALL.method,
+      path: api.UPDATE_ROLL_CALL.path,
       data: staff,
     })
       .then((response) => {
         dispatch({
-          type: "ADD_PRODUCT",
+          type: "UPDATE_ROLL_CALL",
           response,
         });
       })
 
       .catch((err) =>
         dispatch({
-          type: "ADD_PRODUCT",
+          type: "UPDATE_ROLL_CALL",
           err,
         })
       );
   };
 };
-export const update = (data) => {
-  return async (dispatch, getState) => {
+
+export const getDataImport = (data = {}) => {
+  return async (dispatch) => {
     await Service.send({
-      method: api.UPDATE_PRODUCT.method,
-      path: api.UPDATE_PRODUCT.path,
-      data,
+      method: api.IMPORT.method,
+      path: api.IMPORT.path,
+      data: data,
     })
       .then((response) => {
         dispatch({
-          type: "UPDATE_PRODUCT",
+          type: "IMPORT",
           response,
         });
       })
       .catch((err) =>
         dispatch({
-          type: "UPDATE_PRODUCT",
+          type: "IMPORT",
           err,
         })
       );
   };
 };
-export const remove = (data) => {
-  return async (dispatch, getState) => {
-    await Service.send({
-      method: api.DELETE_PRODUCT.method,
-      path: api.DELETE_PRODUCT.path,
-      data,
-    })
-      .then((response) => {
-        dispatch({
-          type: "DELETE_PRODUCT",
-          response,
-        });
-      })
-      .catch((err) => console.log(err));
-  };
-};
 
-export const getInstractors = (params) => {
+export const getDataExport = (params) => {
   return async (dispatch) => {
     await Service.send({
-      method: api.LIST_INSTRACTORS.method,
-      path: api.LIST_INSTRACTORS.path,
+      method: api.LIST_ROLL_CALL.method,
+      path: api.LIST_ROLL_CALL.path,
       data: params,
     }).then((response) => {
       dispatch({
-        type: "GET_DATA_INSTRACTORS",
-        data: response?.data?.data,
-        totalPages: response?.data?.total,
-        params,
-      });
-    });
-  };
-};
-
-export const getTerm = (params) => {
-  return async (dispatch) => {
-    await Service.send({
-      method: api.LIST_PRODUCT_TERM.method,
-      path: api.LIST_PRODUCT_TERM.path,
-      data: params,
-    }).then((response) => {
-      dispatch({
-        type: "GET_DATA_TERM_PRODUCT",
-        data: response?.data,
-        params,
-      });
-    });
-  };
-};
-export const getTermId = (termId) => {
-  return async (dispatch) => {
-    await Service.send({
-      method: api.GET_TERM.method,
-      path: api.GET_TERM.path,
-      query: { id: termId },
-    })
-      .then((response) => {
-        dispatch({
-          type: "GET_TERM_PRODUCT",
-          selected: response?.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-};
-
-//nghành
-export const getDataDepartment = (params) => {
-  return async (dispatch) => {
-    await Service.send({
-      method: api.LIST_DEPARTMENT.method,
-      path: api.LIST_DEPARTMENT.path,
-      data: params,
-    }).then((response) => {
-      dispatch({
-        type: "GET_DATA_DEPARTMENT",
+        type: "GET_DATA_EXPORT_ROLL_CALL",
         data: response?.data?.data,
         totalPages: response?.data?.total,
         params,

@@ -62,9 +62,9 @@ const SidebarAdd = ({
       .string()
       .required(<FormattedMessage id="The phone number field is required" />)
       .min(10, <FormattedMessage id="Số điện thoại tối thiểu 10 ký tự" />),
-    curriculumSectionId: yup
-      .number()
-      .required(<FormattedMessage id="Vui lòng chọn lớp học" />),
+    // curriculumSectionId: yup
+    //   .number()
+    //   .required(<FormattedMessage id="Vui lòng chọn lớp học" />),
   });
 
   const { register, errors, control, setError, setValue, handleSubmit } =
@@ -116,9 +116,9 @@ const SidebarAdd = ({
             code: values?.code,
             phone: values?.phone || undefined,
             role: "MANAGE_USER",
-            status: 3,
+            status: 1,
             avatar: urlImage,
-            curriculumSectionId: parseInt(values?.curriculumSectionId),
+            // curriculumSectionId: parseInt(values?.curriculumSectionId),
           })
         );
       }
@@ -332,43 +332,6 @@ const SidebarAdd = ({
               <FormattedMessage id="Invalid phone number" />
             </small>
           )}
-        </FormGroup>
-
-        <FormGroup>
-          <Label>
-            <FormattedMessage id="term" />{" "}
-            <span className="text-danger">*</span>
-          </Label>
-          <Controller
-            control={control}
-            name="curriculumSectionId"
-            render={({ field }) => {
-              return (
-                <Select
-                  id="curriculumSectionId"
-                  innerRef={register}
-                  name="curriculumSectionId"
-                  className={classnames("react-select")}
-                  options={terms?.map((item, index) => {
-                    return {
-                      value: item?.id,
-                      label: `${item?.code} - ${item?.title}`,
-                      number: index + 1,
-                    };
-                  })}
-                  classNamePrefix="select"
-                  {...field}
-                  onChange={(e) => {
-                    setError("curriculumSectionId", "");
-                    setValue("curriculumSectionId", e?.value);
-                  }}
-                />
-              );
-            }}
-          ></Controller>
-          <small className="text-danger">
-            {errors?.curriculumSectionId && errors.curriculumSectionId.message}
-          </small>
         </FormGroup>
 
         {/* <FormGroup>

@@ -6,7 +6,7 @@ import PagesRoutes from "./Pages";
 const TemplateTitle = "%s - Vuexy React Admin Template";
 
 // ** Default Route
-const DefaultRoute = "/apps/staff/list";
+const DefaultRoute = "/apps/timetable/list";
 
 // ** Merge Routes
 const Routes = [...AppRoutes, ...PagesRoutes];

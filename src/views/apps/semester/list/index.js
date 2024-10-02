@@ -7,6 +7,7 @@ import { columns } from "./columns";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getDataSemester, getDataCourse } from "../store/action";
+import Select from "react-select";
 
 import DataTable from "react-data-table-component";
 import { ChevronDown } from "react-feather";
@@ -38,6 +39,7 @@ const CustomHeader = ({ toggleSidebar }) => {
 const SemesterList = ({ intl }) => {
   const dispatch = useDispatch();
   const semesters = useSelector((state) => state.semesters);
+  const { courses } = useSelector((state) => state.semesters);
 
   const [disable, setDisable] = useState(false);
 
@@ -47,6 +49,12 @@ const SemesterList = ({ intl }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [Name, setName] = useState();
+
+  const optionProduct = {
+    value: "",
+    label: "Chọn năm học",
+  };
+  const [filterProduct, setFilterProduct] = useState(optionProduct);
 
   const [loadData, setLoadData] = useState(false);
 
@@ -58,7 +66,10 @@ const SemesterList = ({ intl }) => {
   useEffect(() => {
     dispatch(
       getDataSemester({
-        filter: {},
+        filter: {
+          name: Name || undefined,
+          productId: filterProduct.value || undefined,
+        },
         skip: 0,
         limit: 20,
         order: [
@@ -107,6 +118,7 @@ const SemesterList = ({ intl }) => {
       getDataSemester({
         filter: {
           name: Name || undefined,
+          productId: filterProduct.value || undefined,
         },
         skip: 0,
         limit: 20,
@@ -169,10 +181,31 @@ const SemesterList = ({ intl }) => {
             <Col md="3">
               <Input
                 className=" w-100"
-                placeholder={intl.formatMessage({ id: "Nhập tên kì học" })}
+                placeholder={intl.formatMessage({ id: "Nhập kì học" })}
                 type="text"
                 value={Name}
                 onChange={(e) => setName(e.target.value)}
+              />
+            </Col>
+
+            <Col md="3">
+              <Select
+                isClearable={false}
+                className="react-select"
+                classNamePrefix="select"
+                options={[
+                  { value: null, label: "Chọn năm học" },
+                  ...(Array.isArray(courses)
+                    ? courses.map((item) => ({
+                        value: item?.id,
+                        label: item?.product_names[0]?.name || "",
+                      }))
+                    : []),
+                ]}
+                value={filterProduct}
+                onChange={(data) => {
+                  setFilterProduct(data);
+                }}
               />
             </Col>
 

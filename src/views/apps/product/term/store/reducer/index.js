@@ -7,6 +7,7 @@ const initialState = {
   selected: null,
   courses: [],
   instractors: [],
+  users: [],
 };
 
 const terms = (state = initialState, action) => {
@@ -66,6 +67,16 @@ const terms = (state = initialState, action) => {
       };
     case "GET_DETAIL_COURSE":
       return { ...state, courseDetail: action.selected };
+
+    //list học sinh
+    case "GET_DATA_STAFF":
+      return {
+        ...state,
+        users: action.data,
+        totals: action.totalPages,
+        params: action.params,
+        status: null,
+      };
 
     default:
       return { ...state };

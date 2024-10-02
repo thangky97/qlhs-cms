@@ -1,4 +1,3 @@
-import ExtensionsHeader from "@components/extensions-header";
 import { Fragment, useEffect, useState } from "react";
 
 import DataTable from "react-data-table-component";
@@ -31,7 +30,6 @@ import {
 } from "../store/action";
 import Sidebar from "./Sidebar";
 import Select from "react-select";
-import { STAFF_ROLE } from "../../../../../constants/app";
 
 const CustomHeader = ({ toggleSidebar }) => {
   return (
@@ -58,13 +56,14 @@ const TermList = ({ intl }) => {
   const dispatch = useDispatch();
   const store = useSelector((state) => state.terms);
   const { productDetail } = useSelector((state) => state.terms);
+  const { instractors } = useSelector((state) => state.terms);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [disable, setDisable] = useState(false);
 
-  const [Name, setName] = useState();
+  const [Code, setCode] = useState();
 
   const statusObj = {
     1: {
@@ -76,12 +75,6 @@ const TermList = ({ intl }) => {
       text: <FormattedMessage id="Deactive" />,
     },
   };
-
-  const statusOptions = [
-    { value: "", label: <FormattedMessage id={"Select status"} />, number: 0 },
-    { value: "1", label: <FormattedMessage id={"Active"} />, number: 0 },
-    { value: "0", label: <FormattedMessage id={"Deactive"} />, number: 1 },
-  ];
 
   const columns = [
     {
@@ -211,11 +204,12 @@ const TermList = ({ intl }) => {
     },
   ];
 
-  const [currentStatus, setCurrentStatus] = useState({
-    value: "",
-    label: <FormattedMessage id={"Select status"} />,
+  const [currentInstractor, setCurrentInstractor] = useState({
+    value: null,
+    label: "Chọn giảng viên",
     number: 0,
   });
+
   const [loadData, setLoadData] = useState(false);
   const lang = useSelector((state) => state.common.language);
   const { id } = useParams();
@@ -223,14 +217,7 @@ const TermList = ({ intl }) => {
     setSidebarOpen(!sidebarOpen);
     setDisable(false);
   };
-  const FilterStatus = (status) => {
-    dispatch(
-      getData({
-        product_id: parseInt(id),
-        lang,
-      })
-    );
-  };
+
   useEffect(() => {
     dispatch(
       getDetail({
@@ -260,7 +247,7 @@ const TermList = ({ intl }) => {
       getInstractors({
         filter: {
           status: 1,
-          role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
+          // role: [STAFF_ROLE.MANAGE_STAFF, STAFF_ROLE.MANAGE_SYSTEM],
         },
         skip: (currentPage - 1) * rowsPerPage,
         limit: 20,
@@ -274,21 +261,24 @@ const TermList = ({ intl }) => {
 
   const filterData = () => {
     dispatch(
-      getDataCourse({
+      getData({
         filter: {
-          name: Name || undefined,
-          status: currentStatus?.value || undefined,
+          code: Code || undefined,
+          instructorId: currentInstractor?.value || undefined,
         },
-        skip: 0,
-        limit: 20,
+        skip: (currentPage - 1) * rowsPerPage,
+        limit: rowsPerPage,
         order: [
           {
-            key: "id",
-            value: "desc",
+            key: "status",
+            value: "asc",
           },
         ],
       })
     );
+
+    // Sau khi filter, cập nhật lại state để component re-render
+    setLoadData(!loadData);
   };
 
   useEffect(() => {
@@ -327,29 +317,22 @@ const TermList = ({ intl }) => {
     }
   }, [store.status]);
 
-  const handleFilter = (val) => {
-    setSearchTerm(val);
-    dispatch(
-      getData({
-        page: currentPage,
-        perPage: rowsPerPage,
-        status: currentStatus.value,
-        q: val,
-      })
-    );
-  };
+  const handleFilter = (val) => {};
 
   const count = Number(
     Math.ceil(productDetail?.sections?.length / rowsPerPage)
   );
 
   const dataToRender = () => {
-    if (productDetail?.sections?.length > 0) {
-      return productDetail?.sections?.sort(
+    if (productDetail?.sections && productDetail?.sections.length > 0) {
+      return productDetail?.sections.sort(
         (a, b) => b.sort_order - a.sort_order
       );
+    } else {
+      return []; // Trả về một mảng rỗng nếu không có dữ liệu
     }
   };
+
   return (
     <div className="app-user-list">
       <span>
@@ -359,16 +342,16 @@ const TermList = ({ intl }) => {
         </a>
       </span>{" "}
       /<span>{<FormattedMessage id="term" />}</span>
-      <Card>
+      {/* <Card>
         <CardBody>
           <Row>
             <Col md="3">
               <Input
                 className=" w-100"
-                placeholder={intl.formatMessage({ id: "Nhập tên môn học" })}
+                placeholder={intl.formatMessage({ id: "Nhập mã lớp học" })}
                 type="text"
-                value={Name}
-                onChange={(e) => setName(e.target.value)}
+                value={Code}
+                onChange={(e) => setCode(e.target.value)}
               />
             </Col>
 
@@ -377,10 +360,18 @@ const TermList = ({ intl }) => {
                 isClearable={false}
                 className="react-select"
                 classNamePrefix="select"
-                options={statusOptions}
-                value={currentStatus}
+                options={[
+                  instractors,
+                  ...instractors?.map((item, index) => {
+                    return {
+                      value: item?.id,
+                      label: `${item?.last_name} ${item?.first_name}`,
+                    };
+                  }),
+                ]}
+                value={currentInstractor}
                 onChange={(data) => {
-                  setCurrentStatus(data);
+                  setCurrentInstractor(data);
                 }}
               />
             </Col>
@@ -392,7 +383,7 @@ const TermList = ({ intl }) => {
             </Col>
           </Row>
         </CardBody>
-      </Card>
+      </Card> */}
       <Card>
         <DataTable
           noHeader
@@ -427,7 +418,6 @@ const TermList = ({ intl }) => {
               rowsPerPage={rowsPerPage}
               searchTerm={searchTerm}
               handleFilter={handleFilter}
-              FilterStatus={FilterStatus}
             />
           }
         />

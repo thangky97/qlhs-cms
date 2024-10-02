@@ -49,6 +49,7 @@ const ClassroomList = ({ intl }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [Name, setName] = useState();
+  const [Area, setArea] = useState();
   const [currentStatus, setCurrentStatus] = useState({
     value: "",
     label: <FormattedMessage id={"Select status"} />,
@@ -118,6 +119,7 @@ const ClassroomList = ({ intl }) => {
       getDataClassroom({
         filter: {
           name: Name || undefined,
+          area: Area || undefined,
           status: currentStatus?.value || undefined,
         },
         skip: 0,
@@ -166,7 +168,17 @@ const ClassroomList = ({ intl }) => {
             <Col md="3">
               <Input
                 className=" w-100"
-                placeholder={intl.formatMessage({ id: "Nhập tên phòng học" })}
+                placeholder={intl.formatMessage({ id: "Khu vực" })}
+                type="text"
+                value={Area}
+                onChange={(e) => setArea(e.target.value)}
+              />
+            </Col>
+
+            <Col md="3">
+              <Input
+                className=" w-100"
+                placeholder={intl.formatMessage({ id: "Phòng học" })}
                 type="text"
                 value={Name}
                 onChange={(e) => setName(e.target.value)}

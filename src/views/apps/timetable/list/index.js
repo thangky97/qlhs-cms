@@ -2,7 +2,7 @@ import ExtensionsHeader from "@components/extensions-header";
 import "@styles/react/libs/flatpickr/flatpickr.scss";
 import { useEffect, useState } from "react";
 import { FormattedMessage, injectIntl } from "react-intl";
-
+import Select from "react-select";
 import { columns } from "./columns";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ import {
   getDataSemester,
   getDataTerm,
 } from "../store/action";
+import { isUserLoggedIn } from "@utils";
 
 import DataTable from "react-data-table-component";
 import { ChevronDown } from "react-feather";
@@ -46,6 +47,18 @@ const CustomHeader = ({ toggleSidebar }) => {
 const TimetableList = ({ intl }) => {
   const dispatch = useDispatch();
   const timetable = useSelector((state) => state.timetable);
+  const { courses } = useSelector((state) => state.timetable);
+  const { staffs } = useSelector((state) => state.timetable);
+  const { terms } = useSelector((state) => state.timetable);
+
+  const [userData, setUserData] = useState(null);
+
+  //** ComponentDidMount
+  useEffect(() => {
+    if (isUserLoggedIn() !== null) {
+      setUserData(JSON.parse(localStorage.getItem("userData")));
+    }
+  }, []);
 
   const [disable, setDisable] = useState(false);
 
@@ -56,6 +69,24 @@ const TimetableList = ({ intl }) => {
 
   const [lesson, setLesson] = useState();
 
+  const optionCourse = {
+    value: "",
+    label: "Môn học",
+  };
+  const [filterCourse, setFilterCourse] = useState(optionCourse);
+
+  const optionTerm = {
+    value: "",
+    label: "Lớp học",
+  };
+  const [filterTerm, setFilterTerm] = useState(optionTerm);
+
+  const optionStaff = {
+    value: "",
+    label: "Giảng viên",
+  };
+  const [filterStaff, setFilterStaff] = useState(optionStaff);
+
   const [loadData, setLoadData] = useState(false);
 
   const toggleSidebar = () => {
@@ -64,9 +95,65 @@ const TimetableList = ({ intl }) => {
   };
 
   useEffect(() => {
+    if (userData?.id) {
+      // Gọi API để kiểm tra xem có bản ghi nào trùng với userId không
+      dispatch(
+        getDataTimetable({
+          filter: {
+            staffId: userData.id, // Lọc theo userData.id
+          },
+          skip: 0,
+          limit: 20,
+          order: [
+            {
+              key: "id",
+              value: "desc",
+            },
+          ],
+        })
+      ).then((response) => {
+        // Kiểm tra kết quả trả về
+        if (response?.data?.length === 0) {
+          // Nếu không có bản ghi trùng khớp, hiển thị tất cả
+          dispatch(
+            getDataTimetable({
+              filter: {}, // Không lọc theo staffId
+              skip: 0,
+              limit: 20,
+              order: [
+                {
+                  key: "id",
+                  value: "desc",
+                },
+              ],
+            })
+          );
+        }
+      });
+    } else {
+      // Nếu không có userData.id, hiển thị tất cả
+      dispatch(
+        getDataTimetable({
+          filter: {}, // Không có filter, hiển thị tất cả
+          skip: 0,
+          limit: 20,
+          order: [
+            {
+              key: "id",
+              value: "desc",
+            },
+          ],
+        })
+      );
+    }
+  }, [userData, loadData, timetable?.statusCode]);
+
+  useEffect(() => {
     dispatch(
       getDataTimetable({
-        filter: {},
+        filter: {
+          staffId: userData?.id,
+        },
         skip: 0,
         limit: 20,
         order: [
@@ -180,6 +267,9 @@ const TimetableList = ({ intl }) => {
       getDataTimetable({
         filter: {
           lesson: lesson || undefined,
+          courseId: filterCourse.value || undefined,
+          staffId: filterStaff.value || undefined,
+          curriculumSectionId: filterTerm.value || undefined,
         },
         skip: 0,
         limit: 20,
@@ -223,13 +313,75 @@ const TimetableList = ({ intl }) => {
       <Card>
         <CardBody>
           <Row>
-            <Col md="3">
+            {/* <Col md="3">
               <Input
                 className=" w-100"
                 placeholder={intl.formatMessage({ id: "Nhập thứ" })}
                 type="text"
                 value={lesson}
                 onChange={(e) => setLesson(e.target.value)}
+              />
+            </Col> */}
+            <Col md="3">
+              <Select
+                isClearable={false}
+                className="react-select"
+                classNamePrefix="select"
+                options={[
+                  { value: null, label: "Chọn lớp học" },
+                  ...(Array.isArray(terms)
+                    ? terms.map((item) => ({
+                        value: item?.id,
+                        label: `${item?.code} - ${item?.title}`,
+                      }))
+                    : []),
+                ]}
+                value={filterTerm}
+                onChange={(data) => {
+                  setFilterTerm(data);
+                }}
+              />
+            </Col>
+
+            <Col md="3">
+              <Select
+                isClearable={false}
+                className="react-select"
+                classNamePrefix="select"
+                options={[
+                  { value: null, label: "Chọn môn học" },
+                  ...(Array.isArray(courses)
+                    ? courses.map((item) => ({
+                        value: item?.id,
+                        label: `${item?.code} - ${item?.name}`,
+                      }))
+                    : []),
+                ]}
+                value={filterCourse}
+                onChange={(data) => {
+                  setFilterCourse(data);
+                }}
+              />
+            </Col>
+
+            <Col md="3">
+              <Select
+                isClearable={false}
+                className="react-select"
+                classNamePrefix="select"
+                options={[
+                  { value: null, label: "Chọn giảng viên" },
+                  ...(Array.isArray(staffs)
+                    ? staffs.map((item) => ({
+                        value: item?.id,
+                        label: `${item?.last_name}  ${item?.first_name}`,
+                      }))
+                    : []),
+                ]}
+                value={filterStaff}
+                onChange={(data) => {
+                  setFilterStaff(data);
+                }}
               />
             </Col>
 

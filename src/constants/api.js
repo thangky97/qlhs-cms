@@ -599,5 +599,28 @@ const api = {
     path: "/timetable/update",
     method: "POST",
   },
+
+  //api diem danh
+  LIST_ROLL_CALL: {
+    path: "/roll_call/get-list",
+    method: "POST",
+  },
+  GET_ROLL_CALL: {
+    path: "/roll_call/get-detail",
+    method: "GET",
+  },
+  CREATE_ROLL_CALL: {
+    path: "/roll_call/insert",
+    method: "POST",
+  },
+
+  UPDATE_ROLL_CALL: {
+    path: "/roll_call/update",
+    method: "POST",
+  },
+  IMPORT: {
+    path: "/roll_call/import",
+    method: "POST",
+  },
 };
 export default api;

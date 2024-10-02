@@ -40,6 +40,7 @@ import navbar from "./navbar";
 
 import semesters from "../../views/apps/semester/store/reducer";
 import timetable from "../../views/apps/timetable/store/reducer";
+import roll_calls from "../../views/apps/roll_call/store/reducer";
 
 const rootReducer = combineReducers({
   auth,
@@ -73,6 +74,7 @@ const rootReducer = combineReducers({
   training_programs,
   semesters,
   timetable,
+  roll_calls,
 });
 
 export default rootReducer;

@@ -49,6 +49,7 @@ const CourseList = ({ intl }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [Name, setName] = useState();
+  const [Code, setCode] = useState();
   const [currentStatus, setCurrentStatus] = useState({
     value: "",
     label: <FormattedMessage id={"Select status"} />,
@@ -118,6 +119,7 @@ const CourseList = ({ intl }) => {
       getDataCourse({
         filter: {
           name: Name || undefined,
+          code: Code || undefined,
           status: currentStatus?.value || undefined,
         },
         skip: 0,
@@ -166,7 +168,17 @@ const CourseList = ({ intl }) => {
             <Col md="3">
               <Input
                 className=" w-100"
-                placeholder={intl.formatMessage({ id: "Nhập tên môn học" })}
+                placeholder={intl.formatMessage({ id: "Mã môn học" })}
+                type="text"
+                value={Code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </Col>
+
+            <Col md="3">
+              <Input
+                className=" w-100"
+                placeholder={intl.formatMessage({ id: "Tên môn học" })}
                 type="text"
                 value={Name}
                 onChange={(e) => setName(e.target.value)}
