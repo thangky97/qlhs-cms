@@ -2,8 +2,6 @@
 import { combineReducers } from "redux";
 
 // ** Reducers Imports
-import partners from "@src/views/apps/cms/home/partner/store/reducer";
-import sliders from "@src/views/apps/cms/home/slider/store/reducer";
 import documents from "@src/views/apps/document/store/reducer";
 import products from "@src/views/apps/product/store/reducer";
 import terms from "@src/views/apps/product/term/store/reducer";
@@ -12,8 +10,6 @@ import transactions from "@src/views/apps/transaction/store/reducer";
 import user_product from "@src/views/apps/user-product/store/reducer";
 import users from "@src/views/apps/user/store/reducer";
 import dataTables from "@src/views/tables/data-tables/store/reducer";
-import abouts from "../../views/apps/cms/about/store/reducer";
-import settings from "../../views/apps/cms/setting/store/reducer";
 import notification from "../../views/apps/notification/store/reducer";
 import kind from "../../views/apps/kind/store/reducer";
 import transcript from "../../views/apps/achievement/transcript/store/reducer";
@@ -44,7 +40,6 @@ import roll_calls from "../../views/apps/roll_call/store/reducer";
 
 const rootReducer = combineReducers({
   auth,
-  sliders,
   common,
   user_product,
   transcript,
@@ -52,13 +47,10 @@ const rootReducer = combineReducers({
   user,
   transactions,
   notification,
-  settings,
   staffs,
   trainninghistory,
   terms,
   products,
-  partners,
-  abouts,
   kind,
   navbar,
   layout,

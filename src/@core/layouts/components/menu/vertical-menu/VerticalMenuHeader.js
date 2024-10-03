@@ -1,7 +1,6 @@
 // ** React Imports
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { getData } from "./../../../../../views/apps/cms/setting/store/action/index";
 // ** Third Party Components
 import { Disc, X, Circle } from "react-feather";
 import logo from "./../../../../../assets/images/logo/logo.png";
@@ -24,10 +23,6 @@ const VerticalMenuHeader = (props) => {
   useEffect(() => {
     if (!menuHover && menuCollapsed) setGroupOpen([]);
   }, [menuHover, menuCollapsed]);
-
-  useEffect(() => {
-    dispatch(getData());
-  }, []);
   // ** Menu toggler component
   const Toggler = () => {
     if (!menuCollapsed) {
